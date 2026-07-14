@@ -1,0 +1,30 @@
+# Build output
+dist/
+dist_wrangler/
+
+# Dependencies
+node_modules/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime env files
+.env
+.env.production
+.env.local
+.env.development
+.env.*.local
+
+# Astro/Wrangler cache and configs
+.astro/
+.wrangler/
+.wrangler-runtime/
+wrangler.toml
+.cloudflare/
+
+# OS files
+.DS_Store
+Thumbs.db

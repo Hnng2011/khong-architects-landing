@@ -1,0 +1,142 @@
+<div class="route-loading" role="status" aria-live="polite" aria-hidden="true">
+  <div class="route-loading__mark" aria-hidden="true">
+    <img src="/assets/khong-logo.png" alt="" width="720" height="711" decoding="async" />
+  </div>
+  <span class="route-loading__text">Loading</span>
+</div>
+
+<script>
+  function isPlainInternalNavigation(event, anchor) {
+    if (event.defaultPrevented || event.button !== 0) return false;
+    if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return false;
+    if (anchor.target && anchor.target !== "_self") return false;
+    if (anchor.hasAttribute("download")) return false;
+
+    const url = new URL(anchor.href, window.location.href);
+    if (url.origin !== window.location.origin) return false;
+    if (url.protocol !== "http:" && url.protocol !== "https:") return false;
+    if (url.pathname === window.location.pathname && url.search === window.location.search) {
+      return url.hash === "" ? false : false;
+    }
+
+    return true;
+  }
+
+  function showRouteLoading() {
+    const overlay = document.querySelector(".route-loading");
+    if (!overlay) return;
+    overlay.setAttribute("aria-hidden", "false");
+    document.documentElement.dataset.routeLoading = "true";
+  }
+
+  document.addEventListener("click", (event) => {
+    const anchor = event.target instanceof Element ? event.target.closest("a[href]") : null;
+    if (!anchor || !isPlainInternalNavigation(event, anchor)) return;
+    event.preventDefault();
+    showRouteLoading();
+    window.setTimeout(() => {
+      window.location.assign(anchor.href);
+    }, 260);
+  });
+
+  window.addEventListener("pageshow", () => {
+    const overlay = document.querySelector(".route-loading");
+    overlay?.setAttribute("aria-hidden", "true");
+    delete document.documentElement.dataset.routeLoading;
+  });
+</script>
+
+<style is:global>
+  .route-loading {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: grid;
+    place-items: center;
+    gap: 0.9rem;
+    align-content: center;
+    background: rgba(255, 255, 255, 0.94);
+    color: #646464;
+    font-family: var(--font-mono, "Courier New", monospace);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 100ms ease;
+  }
+
+  .route-loading[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .route-loading__mark {
+    width: clamp(7.5rem, 16vw, 12rem);
+    animation: route-loading-pulse 900ms ease-in-out infinite alternate;
+  }
+
+  .route-loading__mark img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .route-loading__text {
+    font-size: clamp(1rem, 1.6vw, 1.35rem);
+    font-weight: 700;
+    letter-spacing: 0;
+  }
+
+  .route-loading__text::after {
+    display: inline-block;
+    width: 1.8em;
+    content: "";
+    animation: route-loading-dots 1s steps(4, end) infinite;
+  }
+
+  html[data-route-loading="true"] body {
+    cursor: wait;
+  }
+
+  @keyframes route-loading-pulse {
+    from {
+      transform: translateY(0);
+      opacity: 0.72;
+    }
+
+    to {
+      transform: translateY(-0.18rem);
+      opacity: 1;
+    }
+  }
+
+  @keyframes route-loading-dots {
+    0% {
+      content: "";
+    }
+
+    25% {
+      content: ".";
+    }
+
+    50% {
+      content: "..";
+    }
+
+    75%,
+    100% {
+      content: "...";
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .route-loading,
+    .route-loading__mark,
+    .route-loading__text::after {
+      animation: none;
+      transition: none;
+    }
+
+    .route-loading__text::after {
+      content: "...";
+    }
+  }
+</style>
