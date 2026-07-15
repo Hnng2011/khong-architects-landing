@@ -96,21 +96,6 @@ const contact = {
       {/* Project Detail Layout (Images in masonry on left, sticky text on right) */}
       <div class="layout-detail">
         <div class="left-column">
-          <div class="project-images-masonry">
-            {project.images.map((imgUrl, i) => (
-              <div class="masonry-item">
-                <img
-                  src={imgUrl}
-                  alt={`${project.title} image view ${i + 1}`}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        <div class="right-column">
           <div class="project-details-sticky">
             <h1 class="project-title">{project.title}</h1>
             
@@ -127,6 +112,21 @@ const contact = {
               <h2 class="section-subtitle">Thuyết minh dự án:</h2>
               <p class="description-text">{project.description}</p>
             </div>
+          </div>
+        </div>
+
+        <div class="right-column">
+          <div class="project-images-masonry">
+            {project.images.map((imgUrl, i) => (
+              <div class="masonry-item">
+                <img
+                  src={imgUrl}
+                  alt={`${project.title} image view ${i + 1}`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
+              </div>
+            ))}
           </div>
         </div>
       </div>
@@ -256,7 +256,7 @@ const contact = {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: clamp(1.5rem, 4vh, 3rem) clamp(1.5rem, 4vw, 4rem);
+    padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.5rem, 5vw, 5rem);
     position: relative;
     z-index: 10;
   }
@@ -293,22 +293,26 @@ const contact = {
   /* Main Container */
   .detail-container {
     flex: 1;
-    padding: 0 clamp(1.5rem, 4vw, 4rem) clamp(3rem, 6vh, 4rem);
+    padding: 0 clamp(1.5rem, 5vw, 5rem) clamp(4rem, 8vh, 6rem);
     max-width: 1440px;
     margin: 0 auto;
     width: 100%;
   }
 
-  /* Layout Detail (Images in masonry left, sticky text right) */
+  /* Layout Detail (Details left, Images in masonry right) */
   .layout-detail {
     display: grid;
-    grid-template-columns: 1.8fr 1.2fr;
+    grid-template-columns: 1.2fr 1.8fr;
     gap: clamp(2.5rem, 6vw, 6rem);
     align-items: start;
-    margin-bottom: clamp(4rem, 8vh, 6rem);
+    margin-bottom: clamp(2rem, 4vh, 3.5rem);
   }
 
   .left-column {
+    position: relative;
+  }
+  
+  .right-column {
     width: 100%;
   }
 
@@ -333,10 +337,6 @@ const contact = {
     width: 100%;
     height: auto;
     object-fit: cover;
-  }
-
-  .right-column {
-    position: relative;
   }
 
   .project-details-sticky {
@@ -391,7 +391,7 @@ const contact = {
 
   /* Other/Featured Projects Section (Image 1 style) */
   .other-projects-section {
-    padding-top: clamp(3rem, 6vh, 5rem);
+    padding-top: clamp(2rem, 5vh, 3.5rem);
     border-top: 1px solid #e0e0e0;
   }
 
@@ -529,11 +529,11 @@ const contact = {
 
   @media (max-width: 768px) {
     .header {
-      padding: 1.5rem;
+      padding: 1.5rem 1.5rem 0.5rem;
     }
 
     .detail-container {
-      padding: 0 1.5rem 3rem;
+      padding: 0 1.5rem 4rem;
     }
 
     .other-projects-grid {
