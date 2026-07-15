@@ -1,0 +1,353 @@
+---
+import RouteLoading from "../../components/RouteLoading.astro";
+import { projects } from "../../data/projects.js";
+
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Project", href: "/project/" },
+  { label: "Concept", href: "/concept/" },
+  { label: "Prize", href: "/prize/" },
+];
+
+const contact = {
+  address: "93/10 No Trang Long, Binh Loi Trung Ward, Ho Chi Minh City, Viet Nam",
+  phone: "0913 771 489",
+  email: "khongarch@gmail.com",
+};
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta
+      name="description"
+      content="Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href="https://khongarchitects.vn/project/" />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
+    <link rel="manifest" href="/site.webmanifest" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="KHONG architects" />
+    <meta property="og:title" content="Projects | KHONG architects" />
+    <meta
+      property="og:description"
+      content="Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
+    />
+    <meta property="og:image" content="/hotlink-ok/og-image.jpg" />
+    <meta property="og:url" content="https://khongarchitects.vn/project/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preload" href="/hotlink-ok/khong-logo.png" as="image" />
+    <title>Projects | KHONG architects</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="header">
+      <a class="brand-link" href="/" aria-label="KHONG architects home">
+        <img
+          class="brand-logo"
+          src="/hotlink-ok/khong-logo.png"
+          alt="KHONG architects"
+          width="720"
+          height="711"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </a>
+
+      <nav class="site-nav" aria-label="Primary navigation">
+        {
+          navItems.map((item) => (
+            <a class={`nav-link ${item.label === "Project" ? "active" : ""}`} href={item.href}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+
+    <main id="main" class="project-container">
+      <h1 class="sr-only">Our Projects</h1>
+
+      <div class="projects-grid">
+        {
+          projects.map((project) => (
+            <a class="project-card" href={`/project/${project.slug}/`} aria-label={`View ${project.title}`}>
+              <span class="project-title">{project.title}</span>
+              <div class="project-image-wrapper">
+                <img
+                  class="project-image"
+                  src={project.thumbnail}
+                  alt={project.title}
+                  loading="lazy"
+                  decoding="async"
+                />
+              </div>
+            </a>
+          ))
+        }
+      </div>
+    </main>
+
+    <footer class="contact" aria-label="Studio contact information">
+      <address>
+        <span>Address: {contact.address}</span>
+        <span aria-hidden="true">/</span>
+        <a href={`tel:${contact.phone.replaceAll(" ", "")}`}>Phone: {contact.phone}</a>
+        <span aria-hidden="true">/</span>
+        <a href={`mailto:${contact.email}`}>Email: {contact.email}</a>
+      </address>
+    </footer>
+
+    <RouteLoading />
+  </body>
+</html>
+
+<style is:global>
+  :root {
+    --paper: #ffffff;
+    --ink: #1b1b1b;
+    --soft-ink: #6f6f6f;
+    --focus: #a00000;
+    --font-mono: "Courier New", Courier, monospace;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    min-width: 320px;
+    background: var(--paper);
+    font-family: var(--font-mono);
+    text-size-adjust: 100%;
+  }
+
+  body {
+    min-height: 100svh;
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    display: flex;
+    flex-direction: column;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+
+  a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 0.32rem;
+  }
+
+  .skip-link {
+    position: fixed;
+    z-index: 8;
+    top: 1rem;
+    left: 1rem;
+    transform: translateY(-160%);
+    border: 1px solid var(--ink);
+    background: var(--paper);
+    padding: 0.55rem 0.8rem;
+    color: var(--ink);
+    font-size: 0.95rem;
+  }
+
+  .skip-link:focus {
+    transform: translateY(0);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Header style */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: clamp(1.5rem, 4vh, 3rem) clamp(1.5rem, 4vw, 4rem);
+    position: relative;
+    z-index: 10;
+  }
+
+  .brand-link {
+    display: block;
+    width: min(8vw, 6rem);
+    min-width: 4rem;
+  }
+
+  .brand-logo {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .site-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.28rem;
+    color: var(--soft-ink);
+    font-size: clamp(1.02rem, 1.25vw, 1.45rem);
+    font-weight: 700;
+    line-height: 1.24;
+    text-align: right;
+  }
+
+  .nav-link {
+    min-height: 1.65rem;
+    letter-spacing: 0;
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
+  .nav-link.active {
+    color: var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  /* Main Container */
+  .project-container {
+    flex: 1;
+    padding: 0 clamp(1.5rem, 4vw, 4rem) clamp(6rem, 10vh, 8rem);
+  }
+
+  /* Grid Layout */
+  .projects-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+    max-width: 1440px;
+    margin: 0 auto;
+  }
+
+  .project-card {
+    position: relative;
+    display: block;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+  }
+
+  .project-title {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 5;
+    font-family: var(--font-mono);
+    font-size: clamp(0.75rem, 1vw, 1rem);
+    font-weight: 700;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 0.35rem 0.7rem;
+    backdrop-filter: blur(4px);
+    transition: background 0.3s ease;
+  }
+
+  .project-image-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .project-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .project-card:hover .project-image {
+    transform: scale(1.05);
+  }
+
+  .project-card:hover .project-title {
+    background: rgba(255, 255, 255, 1);
+  }
+
+  /* Footer style */
+  .contact {
+    padding: clamp(1rem, 3vh, 2rem) 1rem;
+    background: transparent;
+    color: #646464;
+    font-family: var(--font-mono);
+    font-size: clamp(0.68rem, 0.82vw, 0.95rem);
+    line-height: 1.35;
+    text-align: center;
+    border-top: 1px solid #f0f0f0;
+    margin-top: auto;
+  }
+
+  .contact address {
+    display: flex;
+    justify-content: center;
+    gap: clamp(0.55rem, 1vw, 1.2rem);
+    margin: 0;
+    font-style: normal;
+    white-space: nowrap;
+  }
+
+  .contact a:hover {
+    color: var(--ink);
+  }
+
+  /* Responsive Design */
+  @media (max-width: 1024px) {
+    .projects-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .projects-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+
+    .header {
+      padding: 1.5rem;
+    }
+
+    .project-container {
+      padding: 0 1.5rem 6rem;
+    }
+
+    .contact address {
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      white-space: normal;
+    }
+
+    .contact span[aria-hidden="true"] {
+      display: none;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .projects-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
