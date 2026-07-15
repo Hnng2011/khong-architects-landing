@@ -45,11 +45,11 @@ const contact = {
     <meta name="robots" content="index, follow" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="color-scheme" content="light" />
-    <link rel="canonical" href={`https://khongarchitects.vn/project/${project.slug}/`} />
+    <link rel="canonical" href={`https://khongvietnam.com/project/${project.slug}/`} />
     <link rel="icon" href="/favicon.ico" sizes="any" />
     <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-    <link rel="manifest" href="/site.webmanifest" />
+    <link rel="manifest" href="/manifest.json" />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="KHONG architects" />
@@ -59,7 +59,7 @@ const contact = {
       content={`${project.title} - Architectural project by KHONG architects.`}
     />
     <meta property="og:image" content={project.thumbnail} />
-    <meta property="og:url" content={`https://khongarchitects.vn/project/${project.slug}/`} />
+    <meta property="og:url" content={`https://khongvietnam.com/project/${project.slug}/`} />
     <meta name="twitter:card" content="summary_large_image" />
 
     <link rel="preload" href="/hotlink-ok/khong-logo.png" as="image" />
@@ -93,85 +93,77 @@ const contact = {
     </header>
 
     <main id="main" class="detail-container">
-      {
-        project.layout === "horizontal" ? (
-          /* Layout Ngang / Horizontal layout matching Image 2 */
-          <div class="layout-horizontal">
-            <div class="left-column">
-              <h1 class="project-title">{project.title}</h1>
-              
-              <div class="project-info-block">
-                <h2 class="section-subtitle">Thông tin dự án:</h2>
-                <ul class="info-list">
-                  <li><strong>Địa chỉ:</strong> {project.info.address}</li>
-                  <li><strong>Diện tích:</strong> {project.info.area}</li>
-                  <li><strong>Năm hoàn thành:</strong> {project.info.year}</li>
-                </ul>
+      {/* Project Detail Layout (Images in masonry on left, sticky text on right) */}
+      <div class="layout-detail">
+        <div class="left-column">
+          <div class="project-images-masonry">
+            {project.images.map((imgUrl, i) => (
+              <div class="masonry-item">
+                <img
+                  src={imgUrl}
+                  alt={`${project.title} image view ${i + 1}`}
+                  loading={i === 0 ? "eager" : "lazy"}
+                  decoding="async"
+                />
               </div>
+            ))}
+          </div>
+        </div>
 
-              <div class="project-desc-block">
-                <h2 class="section-subtitle">Thuyết minh dự án:</h2>
-                <p class="description-text">{project.description}</p>
-              </div>
-
-              {project.images[0] && (
-                <div class="landscape-image-wrapper">
-                  <img src={project.images[0]} alt={`${project.title} landscape view`} loading="lazy" decoding="async" />
-                </div>
-              )}
+        <div class="right-column">
+          <div class="project-details-sticky">
+            <h1 class="project-title">{project.title}</h1>
+            
+            <div class="project-info-block">
+              <h2 class="section-subtitle">Thông tin dự án:</h2>
+              <ul class="info-list">
+                <li><strong>Địa chỉ:</strong> {project.info.address}</li>
+                <li><strong>Diện tích:</strong> {project.info.area}</li>
+                <li><strong>Năm hoàn thành:</strong> {project.info.year}</li>
+              </ul>
             </div>
 
-            <div class="right-column">
-              <div class="portrait-images-grid">
-                {project.images.slice(1).map((imgUrl, i) => (
-                  <div class="portrait-image-wrapper">
-                    <img src={imgUrl} alt={`${project.title} portrait view ${i + 1}`} loading="lazy" decoding="async" />
-                  </div>
-                ))}
-              </div>
+            <div class="project-desc-block">
+              <h2 class="section-subtitle">Thuyết minh dự án:</h2>
+              <p class="description-text">{project.description}</p>
             </div>
           </div>
-        ) : (
-          /* Layout Dọc / Vertical layout matching Image 1 */
-          <div class="layout-vertical">
-            <div class="vertical-intro">
-              <h1 class="project-title">{project.title}</h1>
-              <div class="intro-grid">
-                <div class="project-info-block">
-                  <h2 class="section-subtitle">Thông tin dự án:</h2>
-                  <ul class="info-list">
-                    <li><strong>Địa chỉ:</strong> {project.info.address}</li>
-                    <li><strong>Diện tích:</strong> {project.info.area}</li>
-                    <li><strong>Năm hoàn thành:</strong> {project.info.year}</li>
-                  </ul>
-                </div>
-                <div class="project-desc-block">
-                  <h2 class="section-subtitle">Thuyết minh dự án:</h2>
-                  <p class="description-text">{project.description}</p>
-                </div>
-              </div>
-            </div>
+        </div>
+      </div>
 
-            <div class="vertical-images-grid">
-              {project.images.map((imgUrl, i) => (
-                <div class="vertical-image-wrapper">
-                  <img src={imgUrl} alt={`${project.title} detail view ${i + 1}`} loading="lazy" decoding="async" />
+      {/* Featured / Other Projects Section (Image 1 style grid layout) */}
+      <section class="other-projects-section">
+        <h2 class="other-projects-heading">Dự án tiêu biểu</h2>
+        
+        <div class="other-projects-grid">
+          {
+            projects.map((p) => (
+              <a class={`other-project-card ${p.slug === project.slug ? "current" : ""}`} href={`/project/${p.slug}/`} aria-label={`View ${p.title}`}>
+                <span class="other-project-title">{p.title}</span>
+                <div class="other-project-image-wrapper">
+                  <img
+                    class="other-project-image"
+                    src={p.thumbnail}
+                    alt={p.title}
+                    loading="lazy"
+                    decoding="async"
+                  />
                 </div>
-              ))}
-            </div>
-          </div>
-        )
-      }
+              </a>
+            ))
+          }
+        </div>
 
-      {/* Pagination Navigation matching Image 1 */}
-      <nav class="project-pagination" aria-label="Projects navigation">
-        <a class="pagination-link prev" href={`/project/${prevProject.slug}/`}>
-          &lt;- Previous Project
-        </a>
-        <a class="pagination-link next" href={`/project/${nextProject.slug}/`}>
-          Next Project -&gt;
-        </a>
-      </nav>
+        {/* Pagination Navigation matching Image 1 */}
+        <nav class="project-pagination" aria-label="Projects navigation">
+          <a class="pagination-link prev" href={`/project/${prevProject.slug}/`}>
+            &lt;- Previous Project
+          </a>
+          <a class="pagination-link next" href={`/project/${nextProject.slug}/`}>
+            Next Project -&gt;
+          </a>
+        </nav>
+      </section>
     </main>
 
     <footer class="contact" aria-label="Studio contact information">
@@ -307,18 +299,66 @@ const contact = {
     width: 100%;
   }
 
+  /* Layout Detail (Images in masonry left, sticky text right) */
+  .layout-detail {
+    display: grid;
+    grid-template-columns: 1.8fr 1.2fr;
+    gap: clamp(2.5rem, 6vw, 6rem);
+    align-items: start;
+    margin-bottom: clamp(4rem, 8vh, 6rem);
+  }
+
+  .left-column {
+    width: 100%;
+  }
+
+  /* CSS Columns Masonry Grid */
+  .project-images-masonry {
+    column-count: 2;
+    column-gap: clamp(1rem, 2vw, 2rem);
+    width: 100%;
+  }
+
+  .masonry-item {
+    break-inside: avoid;
+    margin-bottom: clamp(1rem, 2vw, 2rem);
+    width: 100%;
+    overflow: hidden;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+  }
+
+  .masonry-item img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+  }
+
+  .right-column {
+    position: relative;
+  }
+
+  .project-details-sticky {
+    position: sticky;
+    top: clamp(2rem, 5vh, 4rem);
+    display: flex;
+    flex-direction: column;
+    gap: clamp(2rem, 4vh, 3rem);
+  }
+
   .project-title {
     font-family: var(--font-mono);
-    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-size: clamp(1.8rem, 3vw, 2.8rem);
     font-weight: 700;
     margin-top: 0;
-    margin-bottom: 2rem;
+    margin-bottom: 0;
     line-height: 1.1;
   }
 
   .section-subtitle {
     font-family: var(--font-mono);
-    font-size: clamp(1rem, 1.2vw, 1.25rem);
+    font-size: clamp(0.95rem, 1.1vw, 1.15rem);
     font-weight: 700;
     margin-top: 0;
     margin-bottom: 0.8rem;
@@ -329,7 +369,7 @@ const contact = {
     list-style: none;
     padding: 0;
     margin: 0;
-    font-size: clamp(0.85rem, 1vw, 1.05rem);
+    font-size: clamp(0.85rem, 0.95vw, 1rem);
     line-height: 1.6;
     color: var(--soft-ink);
   }
@@ -343,100 +383,82 @@ const contact = {
   }
 
   .description-text {
-    font-size: clamp(0.85rem, 1vw, 1.05rem);
+    font-size: clamp(0.85rem, 0.95vw, 1rem);
     line-height: 1.6;
     color: var(--soft-ink);
     margin: 0;
   }
 
-  /* Layout 2: Horizontal split */
-  .layout-horizontal {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: clamp(2rem, 5vw, 5rem);
-    align-items: start;
+  /* Other/Featured Projects Section (Image 1 style) */
+  .other-projects-section {
+    padding-top: clamp(3rem, 6vh, 5rem);
+    border-top: 1px solid #e0e0e0;
   }
 
-  .left-column {
-    display: flex;
-    flex-direction: column;
-    gap: clamp(2rem, 4vh, 3.5rem);
+  .other-projects-heading {
+    font-family: var(--font-mono);
+    font-size: clamp(1.2rem, 1.8vw, 1.8rem);
+    font-weight: 700;
+    margin-top: 0;
+    margin-bottom: clamp(2rem, 4vh, 3.5rem);
+    text-align: center;
+    color: var(--soft-ink);
   }
 
-  .landscape-image-wrapper {
-    width: 100%;
-    aspect-ratio: 16 / 10;
-    overflow: hidden;
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-  }
-
-  .landscape-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .right-column {
-    height: 100%;
-  }
-
-  .portrait-images-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: clamp(1rem, 2vw, 2rem);
-  }
-
-  .portrait-image-wrapper {
-    width: 100%;
-    aspect-ratio: 3 / 4;
-    overflow: hidden;
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-  }
-
-  .portrait-image-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Layout 1: Vertical grid */
-  .layout-vertical {
-    display: flex;
-    flex-direction: column;
-    gap: 3rem;
-  }
-
-  .vertical-intro {
-    border-bottom: 1px solid #f0f0f0;
-    padding-bottom: 2rem;
-  }
-
-  .intro-grid {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: clamp(2rem, 4vw, 4rem);
-  }
-
-  .vertical-images-grid {
+  .other-projects-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: clamp(1rem, 2vw, 2rem);
+    margin-bottom: clamp(2.5rem, 5vh, 4rem);
   }
 
-  .vertical-image-wrapper {
-    width: 100%;
+  .other-project-card {
+    position: relative;
+    display: block;
     aspect-ratio: 3 / 4;
     overflow: hidden;
     background: #f5f5f5;
     border: 1px solid #e0e0e0;
   }
 
-  .vertical-image-wrapper img {
+  .other-project-card.current {
+    outline: 2px solid var(--soft-ink);
+  }
+
+  .other-project-title {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    z-index: 5;
+    font-family: var(--font-mono);
+    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
+    font-weight: 700;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.85);
+    padding: 0.25rem 0.5rem;
+    backdrop-filter: blur(4px);
+    transition: background 0.3s ease;
+  }
+
+  .other-project-image-wrapper {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  .other-project-image {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .other-project-card:hover .other-project-image {
+    transform: scale(1.05);
+  }
+
+  .other-project-card:hover .other-project-title {
+    background: rgba(255, 255, 255, 1);
   }
 
   /* Pagination */
@@ -444,11 +466,10 @@ const contact = {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: clamp(4rem, 8vh, 6rem);
-    padding-top: 2rem;
-    border-top: 1px solid #e0e0e0;
+    padding-top: 1.5rem;
+    border-top: 1px solid #f0f0f0;
     font-family: var(--font-mono);
-    font-size: clamp(0.9rem, 1.2vw, 1.15rem);
+    font-size: clamp(0.85rem, 1.1vw, 1.05rem);
     font-weight: 700;
   }
 
@@ -483,14 +504,25 @@ const contact = {
     white-space: nowrap;
   }
 
+  .contact a:hover {
+    color: var(--ink);
+  }
+
   /* Responsive Design */
   @media (max-width: 1024px) {
-    .layout-horizontal {
+    .layout-detail {
       grid-template-columns: 1fr;
       gap: 3rem;
+      /* On mobile, show text/details first, then the masonry images */
+      display: flex;
+      flex-direction: column;
     }
 
-    .vertical-images-grid {
+    .project-details-sticky {
+      position: static;
+    }
+
+    .other-projects-grid {
       grid-template-columns: repeat(2, 1fr);
     }
   }
@@ -504,12 +536,7 @@ const contact = {
       padding: 0 1.5rem 3rem;
     }
 
-    .intro-grid {
-      grid-template-columns: 1fr;
-      gap: 1.5rem;
-    }
-
-    .vertical-images-grid {
+    .other-projects-grid {
       grid-template-columns: repeat(2, 1fr);
     }
 
@@ -526,8 +553,12 @@ const contact = {
   }
 
   @media (max-width: 480px) {
+    .project-images-masonry {
+      column-count: 1;
+    }
+
     .portrait-images-grid,
-    .vertical-images-grid {
+    .other-projects-grid {
       grid-template-columns: 1fr;
     }
   }
