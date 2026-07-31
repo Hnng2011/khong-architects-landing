@@ -1,77 +1,93 @@
-# KHONG Architects Landing Page
+# KHONG Architects — Portfolio Landing Page
 
-Dự án này là trang web tĩnh được phát triển bằng framework **Astro**. Dưới đây là hướng dẫn chi tiết cách tải mã nguồn lên GitHub và cấu hình triển khai tự động lên **Cloudflare Pages**.
-
----
-
-## 🛠️ Hướng Dẫn Đưa Lên GitHub
-
-Sau khi khởi tạo mã nguồn cục bộ, bạn hãy thực hiện các bước sau để đẩy code lên GitHub của mình:
-
-1. **Tạo Kho Chứa (Repository) Mới trên GitHub:**
-   - Truy cập [github.com/new](https://github.com/new).
-   - Đặt tên cho kho chứa (ví dụ: `khong-architects-landing`).
-   - **Lưu ý quan trọng:** Không chọn thêm README, `.gitignore` hoặc License (để tránh xung đột lịch sử commit).
-   - Nhấn **Create repository**.
-
-2. **Liên Kết và Đẩy Code Cục Bộ Lên GitHub:**
-   - Mở Terminal tại thư mục dự án và chạy các lệnh sau (thay thế URL bằng URL kho chứa của bạn):
-     ```bash
-     git remote add origin <URL_KHO_CHỨA_GITHUB_CỦA_BẠN>
-     git branch -M main
-     git push -u origin main
-     ```
+Trang web giới thiệu dự án kiến trúc cao cấp của **KHONG Architects**, được xây dựng trên nền tảng **Astro** theo định hướng thiết kế tối giản, hiện đại và tối ưu hóa hiệu năng tuyệt đối.
 
 ---
 
-## 🚀 Hướng Dẫn Triển Khai Lên Cloudflare Pages
-
-Bạn có hai cách để triển khai trang web này lên Cloudflare Pages. Phương pháp 1 được khuyến khích sử dụng vì tính đơn giản và tự động tối đa.
-
-### Cách 1: Liên kết trực tiếp GitHub với Cloudflare Pages (Khuyến khích)
-
-Cloudflare sẽ tự động theo dõi repo GitHub của bạn. Mỗi khi bạn push code mới lên nhánh `main`, Cloudflare sẽ tự động build và deploy.
-
-1. Đăng nhập vào trang quản trị [Cloudflare Dashboard](https://dash.cloudflare.com/).
-2. Chọn **Workers & Pages** từ thanh menu bên trái.
-3. Nhấp vào nút **Create application** -> Chọn tab **Pages** -> Nhấp vào **Connect to Git**.
-4. Liên kết tài khoản GitHub của bạn và chọn kho chứa vừa tạo (`khong-architects-landing`).
-5. Cấu hình cài đặt Build (Build settings):
-   - **Framework preset:** Chọn `Astro` (Cloudflare sẽ tự điền các lệnh build bên dưới).
-   - **Build command:** `npm run build`
-   - **Build output directory:** `dist`
-6. Nhấp vào **Save and Deploy**. Cloudflare sẽ bắt đầu build và cấp cho bạn một tên miền phụ dạng `*.pages.dev` miễn phí. Bạn cũng có thể dễ dàng cấu hình tên miền riêng của mình (`khongarchitects.vn`) tại đây.
+## 🎨 Figma Design
+- **Figma Design Link**: [Figma Design Link]() *(Đang cập nhật)*
 
 ---
 
-### Cách 2: Triển khai thông qua GitHub Actions
+## 🌐 Tiêu Chuẩn Kỹ Thuật & Audit Compliance
 
-Nếu bạn muốn kiểm soát quá trình build trực tiếp trên GitHub và đẩy bản dựng hoàn thiện sang Cloudflare, dự án này đã đi kèm file cấu hình GitHub Actions tại địa chỉ `.github/workflows/deploy.yml`.
+Dự án tuân thủ đầy đủ các chuẩn mực phát triển web hiện đại:
 
-Để sử dụng cách này:
-1. Bạn cần lấy **Account ID** và **API Token** từ tài khoản Cloudflare của mình.
-2. Vào phần cài đặt Repo trên GitHub: **Settings -> Secrets and variables -> Actions**.
-3. Thêm hai Repository Secrets sau:
-   - `CLOUDFLARE_API_TOKEN`: Token có quyền truy cập Cloudflare Pages.
-   - `CLOUDFLARE_ACCOUNT_ID`: ID tài khoản Cloudflare của bạn.
-4. Mỗi lần bạn push code lên nhánh `main`, GitHub Actions sẽ tự động chạy build và deploy sang Cloudflare.
+### 1. 🏆 Tiêu Chuẩn W3C (W3C HTML5 & CSS3 Standards)
+- **Semantic HTML5**: Sử dụng chuẩn xác các thẻ ngữ nghĩa ngữ cảnh như `<header>`, `<main>`, `<footer>`, `<nav>`, `<article>`, `<address>` giúp cấu trúc trang web mạch lạc và rõ ràng.
+- **CSS3 Clean Variables System**: Hệ thống biến CSS nhất quán (`--paper`, `--ink`, `--soft-ink`, `--focus`, `--font-mono`), đảm bảo khả năng bảo trì và mở rộng lâu dài.
+
+### 2. 🔍 Audit SEO & Cấu Hình Indexing Hiện Đại
+- **Kiểm Soát Indexing Chuẩn Xác**:
+  - Trang chủ (`/`): Cấu hình `<meta name="robots" content="index, follow, max-image-preview:large" />` cho phép các công cụ tìm kiếm index ưu tiên.
+  - Các đường dẫn phụ (`/project/`, `/project/[slug]/`, `/concept/`, `/prize/`): Chặn index bằng `<meta name="robots" content="noindex, follow" />` tránh bị phân tán thứ hạng tìm kiếm.
+- **Robots.txt Directives**: Cấu hình tệp `public/robots.txt` cho phép crawl trang chủ và hạn chế crawl các route chưa cần thiết.
+- **OpenGraph & Metadata**: Đầy đủ các thẻ Meta OpenGraph (`og:title`, `og:description`, `og:image`, `og:url`, `og:site_name`) và thẻ `canonical` trên từng trang.
+
+### 3. ⚡ Tối Ưu Hệu Năng & Core Web Vitals
+- **Static Site Generation (SSG)**: Xuất toàn bộ mã nguồn thành HTML/CSS/JS tĩnh tại `/dist`, giúp thời gian tải trang nhanh tức thì.
+- **Tải Ảnh Tối Ưu**: Sử dụng định dạng ảnh thế hệ mới (AVIF/WebP) với `decoding="async"` và `loading="lazy"` cho các ảnh nằm ngoài tầm nhìn ban đầu.
+- **Zero Layout Shift (CLS = 0)**: Cấu hình tỷ lệ khung hình (`aspect-ratio: 1 / 1`) và hệ thống phông chữ cố định, giúp giao diện không bị giật lag khi tải trang.
+
+### 4. ♿ Accessibility (WCAG 2.1 AA Standards)
+- **Bàn Phím & Phím Tắt Navigation**: Hỗ trợ thẻ nhảy nhanh nội dung `<a class="skip-link" href="#main">Skip to content</a>`.
+- **Độ Tương Phản Tốt**: Đạt chuẩn độ tương phản màu sắc chữ trên nền trắng (`--ink: #1b1b1b` trên `--paper: #ffffff`).
+- **Thẻ ARIA Landmark**: Bổ sung `role="status"`, `aria-live="polite"`, `aria-label` cho thanh menu, thanh tiến trình cuộn trang và bộ nạp trang.
 
 ---
 
-## 💻 Phát Triển Dưới Local
+## 🛠️ Cấu Trúc Dự Án
 
-Nếu bạn muốn chạy thử nghiệm dự án ở máy cá nhân:
-
-```bash
-# Cài đặt thư viện
-npm install
-
-# Chạy server phát triển
-npm run dev
-
-# Xây dựng phiên bản production cục bộ
-npm run build
-
-# Xem trước phiên bản đã build
-npm run preview
 ```
+khong-architects-landing/
+├── public/
+│   ├── hotlink-ok/          # Tài nguyên hình ảnh kiến trúc & hoa sen cao cấp
+│   ├── favicon.ico          # Favicon & Touch Icons
+│   └── robots.txt           # Điều hướng Robots Crawler
+├── src/
+│   ├── components/
+│   │   └── RouteLoading.astro  # Component chuyển trang mượt mà
+│   ├── data/
+│   │   └── projects.js         # Nguồn dữ liệu dự án trung tâm
+│   └── pages/
+│       ├── index.astro         # Trang chủ Landing Page (Kính mờ & Nét vẽ hoa sen)
+│       ├── [section].astro     # Trang Concept & Prize (Trạng thái Under Development)
+│       └── project/
+│           ├── index.astro     # Trang danh sách dự án (Thanh cuộn thước chia độ)
+│           └── [slug].astro    # Trang chi tiết dự án (Bố cục 4 cột linh hoạt)
+└── astro.config.mjs
+```
+
+---
+
+## 💻 Hướng Dẫn Phát Triển Local
+
+1. **Cài Đặt Thư viện:**
+   ```bash
+   npm install
+   ```
+
+2. **Chạy Server Phát Triển Local:**
+   ```bash
+   npm run dev
+   ```
+
+3. **Xây Dựng Bản Production (Build Static):**
+   ```bash
+   npm run build
+   ```
+
+4. **Xem Trước Bản Build:**
+   ```bash
+   npm run preview
+   ```
+
+---
+
+## 🚀 Triển Khai Lên Cloudflare Pages
+
+Dự án được cấu hình tự động triển khai (Auto Deploy) qua GitHub. Mỗi khi push commit mới lên nhánh `main`, Cloudflare Pages sẽ tự động kích hoạt tiến trình build:
+
+- **Build Command:** `npm run build`
+- **Build Output Directory:** `dist`
+- **Root Directory:** `/`
