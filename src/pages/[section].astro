@@ -119,6 +119,8 @@ const navItems = [
 
   body {
     min-height: 100svh;
+    display: flex;
+    flex-direction: column;
     margin: 0;
     background: var(--paper);
     color: var(--ink);
@@ -206,9 +208,10 @@ const navItems = [
   }
 
   .page {
-    display: grid;
-    min-height: 70vh;
-    place-items: center;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: clamp(2rem, 6vw, 5rem);
     text-align: center;
   }
@@ -217,7 +220,7 @@ const navItems = [
     display: grid;
     gap: clamp(0.75rem, 1.6vw, 1.1rem);
     justify-items: center;
-    margin-top: clamp(5rem, 12vh, 8rem);
+    margin: 0;
   }
 
   .eyebrow,
