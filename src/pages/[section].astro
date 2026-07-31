@@ -47,15 +47,30 @@ const navItems = [
     <meta property="og:title" content={`${title} | KHONG architects`} />
     <meta
       property="og:description"
-      content={`${title} page for KHONG architects is currently under development.`}
+      content={`${title} page for KHONG architects.`}
     />
-    <meta property="og:image" content="/hotlink-ok/og-image.jpg" />
+    <meta property="og:image" content="https://khongvietnam.com/hotlink-ok/og-image.jpg" />
     <meta property="og:url" content={canonicalUrl} />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | KHONG architects`} />
+    <meta
+      name="twitter:description"
+      content={`${title} page for KHONG architects.`}
+    />
+    <meta name="twitter:image" content="https://khongvietnam.com/hotlink-ok/og-image.jpg" />
 
     <link rel="preload" href="/hotlink-ok/khong-logo.png" as="image" />
 
     <title>{title} | KHONG architects</title>
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": `${title} | KHONG architects`,
+      "url": canonicalUrl,
+      "description": `${title} page for KHONG architects.`
+    })} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>

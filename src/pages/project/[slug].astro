@@ -51,7 +51,7 @@ const contact = {
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/manifest.json" />
 
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content="article" />
     <meta property="og:site_name" content="KHONG architects" />
     <meta property="og:title" content={`${project.title} | KHONG architects`} />
     <meta
@@ -60,10 +60,34 @@ const contact = {
     />
     <meta property="og:image" content={project.thumbnail} />
     <meta property="og:url" content={`https://khongvietnam.com/project/${project.slug}/`} />
+
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${project.title} | KHONG architects`} />
+    <meta
+      name="twitter:description"
+      content={`${project.title} - Architectural project by KHONG architects.`}
+    />
+    <meta name="twitter:image" content={project.thumbnail} />
 
     <link rel="preload" href="/hotlink-ok/khong-logo.png" as="image" />
     <title>{project.title} | KHONG architects</title>
+
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "CreativeWork",
+      "name": project.title,
+      "description": project.description,
+      "image": project.thumbnail,
+      "url": `https://khongvietnam.com/project/${project.slug}/`,
+      "creator": {
+        "@type": "ArchitecturalStudio",
+        "name": "KHONG architects"
+      },
+      "locationCreated": {
+        "@type": "Place",
+        "name": project.info.address
+      }
+    })} />
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
