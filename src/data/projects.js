@@ -32,7 +32,12 @@ export const projects = [
     images: [
       "/hotlink-ok/house-placeholder-3.png",
       "/hotlink-ok/house-placeholder-1.png",
-      "/hotlink-ok/house-placeholder-2.png"
+      "/hotlink-ok/house-placeholder-2.png",
+      "/hotlink-ok/house-placeholder-4.png",
+      "/hotlink-ok/house-placeholder-1.png",
+      "/hotlink-ok/house-placeholder-2.png",
+      "/hotlink-ok/house-placeholder-3.png",
+      "/hotlink-ok/house-placeholder-4.png"
     ]
   },
   {
@@ -71,7 +76,10 @@ export const projects = [
     images: [
       "/hotlink-ok/house-placeholder-1.png",
       "/hotlink-ok/house-placeholder-2.png",
-      "/hotlink-ok/house-placeholder-3.png"
+      "/hotlink-ok/house-placeholder-3.png",
+      "/hotlink-ok/house-placeholder-4.png",
+      "/hotlink-ok/house-placeholder-1.png",
+      "/hotlink-ok/house-placeholder-2.png"
     ]
   },
   {
@@ -110,7 +118,10 @@ export const projects = [
     images: [
       "/hotlink-ok/house-placeholder-4.png",
       "/hotlink-ok/house-placeholder-1.png",
-      "/hotlink-ok/house-placeholder-2.png"
+      "/hotlink-ok/house-placeholder-2.png",
+      "/hotlink-ok/house-placeholder-3.png",
+      "/hotlink-ok/house-placeholder-4.png",
+      "/hotlink-ok/house-placeholder-1.png"
     ]
   },
   {
@@ -149,7 +160,10 @@ export const projects = [
     images: [
       "/hotlink-ok/house-placeholder-2.png",
       "/hotlink-ok/house-placeholder-3.png",
-      "/hotlink-ok/house-placeholder-4.png"
+      "/hotlink-ok/house-placeholder-4.png",
+      "/hotlink-ok/house-placeholder-1.png",
+      "/hotlink-ok/house-placeholder-2.png",
+      "/hotlink-ok/house-placeholder-3.png"
     ]
   },
   {

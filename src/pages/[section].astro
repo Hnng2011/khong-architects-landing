@@ -15,6 +15,13 @@ export function getStaticPaths() {
 
 const { title, section } = Astro.props;
 const canonicalUrl = `https://khongvietnam.com/${section}/`;
+
+const navItems = [
+  { label: "Home", href: "/" },
+  { label: "Project", href: "/project/" },
+  { label: "Concept", href: "/concept/" },
+  { label: "Prize", href: "/prize/" },
+];
 ---
 
 <!doctype html>
@@ -53,10 +60,10 @@ const canonicalUrl = `https://khongvietnam.com/${section}/`;
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <main id="main" class="page" aria-labelledby="page-title">
+    <header class="header">
       <a class="brand-link" href="/" aria-label="KHONG architects home">
         <img
-          class="brand"
+          class="brand-logo"
           src="/hotlink-ok/khong-logo.png"
           alt="KHONG architects"
           width="720"
@@ -66,6 +73,18 @@ const canonicalUrl = `https://khongvietnam.com/${section}/`;
         />
       </a>
 
+      <nav class="site-nav" aria-label="Primary navigation">
+        {
+          navItems.map((item) => (
+            <a class={`nav-link ${item.label === title ? "active" : ""}`} href={item.href}>
+              {item.label}
+            </a>
+          ))
+        }
+      </nav>
+    </header>
+
+    <main id="main" class="page" aria-labelledby="page-title">
       <section class="status" aria-describedby="page-note">
         <p class="eyebrow">KHONG architects</p>
         <h1 id="page-title">{title}</h1>
@@ -135,24 +154,63 @@ const canonicalUrl = `https://khongvietnam.com/${section}/`;
     transform: translateY(0);
   }
 
-  .page {
-    display: grid;
-    min-height: 100svh;
-    place-items: center;
-    padding: clamp(2rem, 6vw, 5rem);
-    text-align: center;
+  /* Header style */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: clamp(1.5rem, 3vh, 2rem) 0 0.5rem 0;
+    position: relative;
+    z-index: 10;
+    max-width: 1800px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .brand-link {
-    position: fixed;
-    top: clamp(1.5rem, 4vh, 3rem);
-    left: 50%;
-    transform: translateX(-50%);
+    display: block;
+    width: min(30vw, 16rem);
+    min-width: 10rem;
   }
 
-  .brand {
-    width: clamp(9.5rem, 16vw, 15rem);
+  .brand-logo {
+    width: 100%;
     height: auto;
+    object-fit: contain;
+  }
+
+  .site-nav {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.28rem;
+    color: var(--soft-ink);
+    font-size: clamp(1.02rem, 1.25vw, 1.45rem);
+    font-weight: 700;
+    line-height: 1.24;
+    text-align: right;
+  }
+
+  .nav-link {
+    min-height: 1.65rem;
+    letter-spacing: 0;
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
+  .nav-link.active {
+    color: var(--ink);
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .page {
+    display: grid;
+    min-height: 70vh;
+    place-items: center;
+    padding: clamp(2rem, 6vw, 5rem);
+    text-align: center;
   }
 
   .status {

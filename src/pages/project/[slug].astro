@@ -42,7 +42,7 @@ const contact = {
       name="description"
       content={`${project.title} - Architectural project by KHONG architects in Ho Chi Minh City, Viet Nam.`}
     />
-    <meta name="robots" content="index, follow" />
+    <meta name="robots" content="noindex, follow" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="color-scheme" content="light" />
     <link rel="canonical" href={`https://khongvietnam.com/project/${project.slug}/`} />
@@ -93,18 +93,21 @@ const contact = {
     </header>
 
     <main id="main" class="detail-container">
-      {/* Project Detail Layout (Images in masonry on left, sticky text on right) */}
-      <div class="layout-detail">
-        <div class="left-column">
-          <div class="project-details-sticky">
+      <div class="detail-layout-wrapper">
+        <div class="layout-left-spacer"></div>
+        <div class="project-detail-grid">
+          {/* Description Cell */}
+          <div class="project-desc-cell">
             <h1 class="project-title">{project.title}</h1>
             
             <div class="project-info-block">
               <h2 class="section-subtitle">Thông tin dự án:</h2>
               <ul class="info-list">
                 <li><strong>Địa chỉ:</strong> {project.info.address}</li>
-                <li><strong>Diện tích:</strong> {project.info.area}</li>
-                <li><strong>Năm hoàn thành:</strong> {project.info.year}</li>
+                <li class="info-meta-row">
+                  <span><strong>Diện tích:</strong> {project.info.area}</span>
+                  <span><strong>Năm hoàn thành:</strong> {project.info.year}</span>
+                </li>
               </ul>
             </div>
 
@@ -113,57 +116,21 @@ const contact = {
               <p class="description-text">{project.description}</p>
             </div>
           </div>
-        </div>
 
-        <div class="right-column">
-          <div class="project-images-masonry">
-            {project.images.map((imgUrl, i) => (
-              <div class="masonry-item">
-                <img
-                  src={imgUrl}
-                  alt={`${project.title} image view ${i + 1}`}
-                  loading={i === 0 ? "eager" : "lazy"}
-                  decoding="async"
-                />
-              </div>
-            ))}
-          </div>
+          {/* Image Cells */}
+          {project.images.map((imgUrl, i) => (
+            <div class="image-cell">
+              <img
+                src={imgUrl}
+                alt={`${project.title} image view ${i + 1}`}
+                loading={i < 2 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            </div>
+          ))}
         </div>
+        <div class="layout-right-spacer"></div>
       </div>
-
-      {/* Featured / Other Projects Section (Image 1 style grid layout) */}
-      <section class="other-projects-section">
-        <h2 class="other-projects-heading">Dự án tiêu biểu</h2>
-        
-        <div class="other-projects-grid">
-          {
-            projects.map((p) => (
-              <a class={`other-project-card ${p.slug === project.slug ? "current" : ""}`} href={`/project/${p.slug}/`} aria-label={`View ${p.title}`}>
-                <span class="other-project-title">{p.title}</span>
-                <div class="other-project-image-wrapper">
-                  <img
-                    class="other-project-image"
-                    src={p.thumbnail}
-                    alt={p.title}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                </div>
-              </a>
-            ))
-          }
-        </div>
-
-        {/* Pagination Navigation matching Image 1 */}
-        <nav class="project-pagination" aria-label="Projects navigation">
-          <a class="pagination-link prev" href={`/project/${prevProject.slug}/`}>
-            &lt;- Previous Project
-          </a>
-          <a class="pagination-link next" href={`/project/${nextProject.slug}/`}>
-            Next Project -&gt;
-          </a>
-        </nav>
-      </section>
     </main>
 
     <footer class="contact" aria-label="Studio contact information">
@@ -176,7 +143,150 @@ const contact = {
       </address>
     </footer>
 
+    <!-- Lightbox Modal -->
+    <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
+      <button class="lightbox-close" aria-label="Close preview">&times;</button>
+      <button class="lightbox-prev" aria-label="Previous image">&#10094;</button>
+      <button class="lightbox-next" aria-label="Next image">&#10095;</button>
+      <div class="lightbox-content">
+        <img id="lightbox-img" src="" alt="Preview image" />
+      </div>
+    </div>
+
     <RouteLoading />
+
+    <script>
+      // 1. Dynamic Description Spanning (Vertical)
+      function adjustDescSpan() {
+        const grid = document.querySelector(".project-detail-grid");
+        const desc = document.querySelector(".project-desc-cell");
+        if (!(grid instanceof HTMLElement) || !(desc instanceof HTMLElement)) return;
+
+        const isDesktop = window.innerWidth > 1024;
+        if (!isDesktop) {
+          desc.style.gridRowEnd = "";
+          return;
+        }
+
+        desc.style.gridRowEnd = "span 1";
+
+        const gridStyles = window.getComputedStyle(grid);
+        const gridWidth = grid.clientWidth;
+        const columns = 4;
+        const gap = parseFloat(gridStyles.gap) || 0;
+
+        const cellHeight = (gridWidth - (columns - 1) * gap) / columns;
+        if (cellHeight <= 0) return;
+
+        const descHeight = desc.scrollHeight;
+        
+        const span = Math.ceil((descHeight + 10) / (cellHeight + gap));
+        desc.style.gridRowEnd = `span ${span}`;
+      }
+
+      window.addEventListener("load", adjustDescSpan);
+      window.addEventListener("resize", adjustDescSpan);
+      window.addEventListener("pageshow", adjustDescSpan);
+      
+      if (document.readyState === "complete") {
+        adjustDescSpan();
+      } else {
+        window.addEventListener("DOMContentLoaded", adjustDescSpan);
+      }
+
+      // 2. Lightbox Functionality
+      function initLightbox() {
+        const lightbox = document.getElementById("lightbox");
+        const lightboxImg = document.getElementById("lightbox-img");
+        const closeBtn = document.querySelector(".lightbox-close");
+        const prevBtn = document.querySelector(".lightbox-prev");
+        const nextBtn = document.querySelector(".lightbox-next");
+        const images = Array.from(document.querySelectorAll(".image-cell img"));
+
+        if (!lightbox || !lightboxImg || !closeBtn || !prevBtn || !nextBtn || images.length === 0) return;
+
+        let currentIndex = 0;
+
+        function openLightbox(index) {
+          if (index < 0 || index >= images.length) return;
+          currentIndex = index;
+          const img = images[currentIndex];
+          if (!(img instanceof HTMLImageElement) || !(lightboxImg instanceof HTMLImageElement)) return;
+
+          lightboxImg.src = img.src;
+          lightboxImg.alt = img.alt || "Preview image";
+          lightbox.setAttribute("aria-hidden", "false");
+          document.body.style.overflow = "hidden";
+        }
+
+        function closeLightbox() {
+          lightbox.setAttribute("aria-hidden", "true");
+          document.body.style.overflow = "";
+          // Clear source after transition to prevent flicker on next open
+          setTimeout(() => {
+            if (lightbox.getAttribute("aria-hidden") === "true") {
+              if (lightboxImg instanceof HTMLImageElement) {
+                lightboxImg.src = "";
+              }
+            }
+          }, 350);
+        }
+
+        function showNext() {
+          const nextIndex = (currentIndex + 1) % images.length;
+          openLightbox(nextIndex);
+        }
+
+        function showPrev() {
+          const prevIndex = (currentIndex - 1 + images.length) % images.length;
+          openLightbox(prevIndex);
+        }
+
+        images.forEach((img, index) => {
+          if (img instanceof HTMLImageElement) {
+            img.addEventListener("click", () => {
+              openLightbox(index);
+            });
+          }
+        });
+
+        closeBtn.addEventListener("click", closeLightbox);
+        prevBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          showPrev();
+        });
+        nextBtn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          showNext();
+        });
+        
+        lightbox.addEventListener("click", (e) => {
+          if (e.target === lightbox || e.target === lightbox.querySelector(".lightbox-content") || e.target === lightboxImg) {
+            closeLightbox();
+          }
+        });
+
+        document.addEventListener("keydown", (e) => {
+          if (lightbox.getAttribute("aria-hidden") === "false") {
+            if (e.key === "Escape") {
+              closeLightbox();
+            } else if (e.key === "ArrowRight") {
+              showNext();
+            } else if (e.key === "ArrowLeft") {
+              showPrev();
+            }
+          }
+        });
+      }
+
+      window.addEventListener("load", initLightbox);
+      window.addEventListener("pageshow", initLightbox);
+      if (document.readyState === "complete") {
+        initLightbox();
+      } else {
+        window.addEventListener("DOMContentLoaded", initLightbox);
+      }
+    </script>
   </body>
 </html>
 
@@ -198,6 +308,11 @@ const contact = {
     background: var(--paper);
     font-family: var(--font-mono);
     text-size-adjust: 100%;
+    scrollbar-width: none;
+  }
+
+  html::-webkit-scrollbar {
+    display: none;
   }
 
   body {
@@ -256,15 +371,18 @@ const contact = {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1.5rem, 5vw, 5rem);
+    padding: clamp(1.5rem, 3vh, 2rem) 0 0.5rem 0;
     position: relative;
     z-index: 10;
+    max-width: 1800px;
+    margin: 0 auto;
+    width: 100%;
   }
 
   .brand-link {
     display: block;
-    width: min(8vw, 6rem);
-    min-width: 4rem;
+    width: min(30vw, 16rem);
+    min-width: 10rem;
   }
 
   .brand-logo {
@@ -293,58 +411,43 @@ const contact = {
   /* Main Container */
   .detail-container {
     flex: 1;
-    padding: 0 clamp(1.5rem, 5vw, 5rem) clamp(4rem, 8vh, 6rem);
-    max-width: 1440px;
+    padding: 0.5rem 0 clamp(4rem, 8vh, 6rem);
+    max-width: 1800px;
     margin: 0 auto;
     width: 100%;
   }
 
-  /* Layout Detail (Details left, Images in masonry right) */
-  .layout-detail {
+  .detail-layout-wrapper {
+    display: flex;
+    gap: 0;
+    width: 100%;
+  }
+
+  .layout-left-spacer,
+  .layout-right-spacer {
+    width: min(15vw, 8rem);
+    flex-shrink: 0;
+  }
+
+  /* Grid Layout Detail */
+  .project-detail-grid {
+    flex: 1;
     display: grid;
-    grid-template-columns: 1.2fr 1.8fr;
-    gap: clamp(2.5rem, 6vw, 6rem);
-    align-items: start;
-    margin-bottom: clamp(2rem, 4vh, 3.5rem);
-  }
-
-  .left-column {
-    position: relative;
-  }
-  
-  .right-column {
+    grid-template-columns: repeat(4, 1fr);
+    gap: clamp(1rem, 2vw, 2rem);
+    grid-auto-flow: dense;
     width: 100%;
   }
 
-  /* CSS Columns Masonry Grid */
-  .project-images-masonry {
-    column-count: 2;
-    column-gap: clamp(1rem, 2vw, 2rem);
-    width: 100%;
-  }
-
-  .masonry-item {
-    break-inside: avoid;
-    margin-bottom: clamp(1rem, 2vw, 2rem);
-    width: 100%;
-    overflow: hidden;
-    background: #f5f5f5;
-    border: 1px solid #e0e0e0;
-  }
-
-  .masonry-item img {
-    display: block;
-    width: 100%;
-    height: auto;
-    object-fit: cover;
-  }
-
-  .project-details-sticky {
-    position: sticky;
-    top: clamp(2rem, 5vh, 4rem);
+  .project-desc-cell {
+    grid-column: 1 / 3;
+    grid-row-start: 1;
+    background: transparent;
+    padding: 0 1.5rem 1.5rem 0;
     display: flex;
     flex-direction: column;
-    gap: clamp(2rem, 4vh, 3rem);
+    gap: clamp(1.5rem, 3vh, 2rem);
+    justify-content: flex-start;
   }
 
   .project-title {
@@ -378,6 +481,15 @@ const contact = {
     margin-bottom: 0.4rem;
   }
 
+  .info-meta-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
   .info-list strong {
     color: var(--ink);
   }
@@ -389,97 +501,25 @@ const contact = {
     margin: 0;
   }
 
-  /* Other/Featured Projects Section (Image 1 style) */
-  .other-projects-section {
-    padding-top: clamp(2rem, 5vh, 3.5rem);
-    border-top: 1px solid #e0e0e0;
-  }
-
-  .other-projects-heading {
-    font-family: var(--font-mono);
-    font-size: clamp(1.2rem, 1.8vw, 1.8rem);
-    font-weight: 700;
-    margin-top: 0;
-    margin-bottom: clamp(2rem, 4vh, 3.5rem);
-    text-align: center;
-    color: var(--soft-ink);
-  }
-
-  .other-projects-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: clamp(1rem, 2vw, 2rem);
-    margin-bottom: clamp(2.5rem, 5vh, 4rem);
-  }
-
-  .other-project-card {
+  .image-cell {
     position: relative;
-    display: block;
-    aspect-ratio: 3 / 4;
+    aspect-ratio: 1 / 1;
     overflow: hidden;
     background: #f5f5f5;
     border: 1px solid #e0e0e0;
+    cursor: pointer;
   }
 
-  .other-project-card.current {
-    outline: 2px solid var(--soft-ink);
-  }
-
-  .other-project-title {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    z-index: 5;
-    font-family: var(--font-mono);
-    font-size: clamp(0.7rem, 0.9vw, 0.85rem);
-    font-weight: 700;
-    color: var(--ink);
-    background: rgba(255, 255, 255, 0.85);
-    padding: 0.25rem 0.5rem;
-    backdrop-filter: blur(4px);
-    transition: background 0.3s ease;
-  }
-
-  .other-project-image-wrapper {
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-  }
-
-  .other-project-image {
+  .image-cell img {
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
-  .other-project-card:hover .other-project-image {
-    transform: scale(1.05);
-  }
-
-  .other-project-card:hover .other-project-title {
-    background: rgba(255, 255, 255, 1);
-  }
-
-  /* Pagination */
-  .project-pagination {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding-top: 1.5rem;
-    border-top: 1px solid #f0f0f0;
-    font-family: var(--font-mono);
-    font-size: clamp(0.85rem, 1.1vw, 1.05rem);
-    font-weight: 700;
-  }
-
-  .pagination-link {
-    color: var(--soft-ink);
-    transition: color 0.3s ease;
-  }
-
-  .pagination-link:hover {
-    color: var(--ink);
+  .image-cell:hover img {
+    transform: scale(1.03);
   }
 
   /* Footer style */
@@ -510,20 +550,19 @@ const contact = {
 
   /* Responsive Design */
   @media (max-width: 1024px) {
-    .layout-detail {
-      grid-template-columns: 1fr;
-      gap: 3rem;
-      /* On mobile, show text/details first, then the masonry images */
-      display: flex;
+    .detail-layout-wrapper {
       flex-direction: column;
     }
-
-    .project-details-sticky {
-      position: static;
+    .layout-left-spacer,
+    .layout-right-spacer {
+      display: none;
     }
-
-    .other-projects-grid {
+    .project-detail-grid {
       grid-template-columns: repeat(2, 1fr);
+    }
+    .project-desc-cell {
+      grid-column: 1 / -1;
+      grid-row-end: auto !important;
     }
   }
 
@@ -534,10 +573,6 @@ const contact = {
 
     .detail-container {
       padding: 0 1.5rem 4rem;
-    }
-
-    .other-projects-grid {
-      grid-template-columns: repeat(2, 1fr);
     }
 
     .contact address {
@@ -552,14 +587,111 @@ const contact = {
     }
   }
 
-  @media (max-width: 480px) {
-    .project-images-masonry {
-      column-count: 1;
-    }
-
-    .portrait-images-grid,
-    .other-projects-grid {
+  @media (max-width: 520px) {
+    .project-detail-grid {
       grid-template-columns: 1fr;
     }
+  }
+
+  /* Lightbox Styles */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(27, 27, 27, 0.95);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lightbox[aria-hidden="false"] {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .lightbox-close {
+    position: absolute;
+    top: 2rem;
+    right: 2rem;
+    background: transparent;
+    border: none;
+    font-size: 2.5rem;
+    font-weight: 200;
+    color: #ffffff;
+    cursor: pointer;
+    z-index: 102;
+    line-height: 1;
+    transition: transform 0.3s ease, color 0.3s ease;
+  }
+
+  .lightbox-close:hover {
+    color: #cccccc;
+    transform: rotate(90deg);
+  }
+
+  .lightbox-prev,
+  .lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #ffffff;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    cursor: pointer;
+    padding: 1.5rem;
+    z-index: 102;
+    opacity: 0.6;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    user-select: none;
+  }
+
+  .lightbox-prev:hover,
+  .lightbox-next:hover {
+    opacity: 1;
+    transform: translateY(-50%) scale(1.15);
+  }
+
+  .lightbox-prev {
+    left: 1.5rem;
+  }
+
+  .lightbox-next {
+    right: 1.5rem;
+  }
+
+  @media (max-width: 768px) {
+    .lightbox-prev,
+    .lightbox-next {
+      padding: 0.75rem;
+      font-size: 2rem;
+    }
+    .lightbox-prev { left: 0.5rem; }
+    .lightbox-next { right: 0.5rem; }
+  }
+
+  .lightbox-content {
+    max-width: 90vw;
+    max-height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: scale(0.95);
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .lightbox[aria-hidden="false"] .lightbox-content {
+    transform: scale(1);
+  }
+
+  .lightbox-content img {
+    max-width: 100%;
+    max-height: 85vh;
+    object-fit: contain;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
   }
 </style>

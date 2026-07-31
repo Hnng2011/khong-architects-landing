@@ -2,6 +2,7 @@
 import RouteLoading from "../components/RouteLoading.astro";
 
 const navItems = [
+  { label: "Home", href: "/" },
   { label: "Project", href: "/project/" },
   { label: "Concept", href: "/concept/" },
   { label: "Prize", href: "/prize/" },
@@ -49,28 +50,32 @@ const contact = {
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
 
-    <main id="main" class="landing" aria-labelledby="page-title">
-      <h1 id="page-title" class="sr-only">KHONG architects</h1>
-
-      <img
-        class="brand"
-        src="/hotlink-ok/khong-logo.png"
-        alt="KHONG architects"
-        width="720"
-        height="711"
-        decoding="async"
-        fetchpriority="high"
-      />
-
+    <header class="header">
       <nav class="site-nav" aria-label="Primary navigation">
         {
           navItems.map((item) => (
-            <a class="nav-link" href={item.href}>
+            <a class={`nav-link ${item.label === "Home" ? "active" : ""}`} href={item.href}>
               {item.label}
             </a>
           ))
         }
       </nav>
+    </header>
+
+    <main id="main" class="landing" aria-labelledby="page-title">
+      <h1 id="page-title" class="sr-only">KHONG architects</h1>
+
+      <div class="brand-wrapper">
+        <img
+          class="brand"
+          src="/hotlink-ok/khong-logo.png"
+          alt="KHONG architects"
+          width="720"
+          height="711"
+          decoding="async"
+          fetchpriority="high"
+        />
+      </div>
     </main>
 
     <div class="lotus" data-background-src="/hotlink-ok/lotus-linework.avif" aria-hidden="true"></div>
@@ -200,29 +205,52 @@ const contact = {
     background: transparent;
   }
 
-  .brand {
+  .brand-wrapper {
     position: absolute;
     z-index: 5;
     top: clamp(2rem, 4.9vh, 4rem);
     left: 50%;
-    width: min(18.4vw, 18rem);
-    min-width: 11.8rem;
-    height: auto;
     transform: translateX(-50%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    box-shadow: none;
+  }
+
+  .brand {
+    position: relative;
+    width: min(45vw, 36rem);
+    min-width: 24rem;
+    height: auto;
     object-fit: contain;
   }
 
+  /* Header style */
+  .header {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    padding: clamp(1.5rem, 3vh, 2rem) 0 0.5rem 0;
+    position: relative;
+    z-index: 10;
+    max-width: 1800px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
   .site-nav {
-    position: absolute;
-    z-index: 6;
-    top: clamp(2.1rem, 4.6vh, 4rem);
-    right: clamp(1.4rem, 2.45vw, 3.2rem);
     display: flex;
     flex-direction: column;
     align-items: flex-end;
     gap: 0.28rem;
     color: var(--soft-ink);
-    font-size: clamp(1.02rem, 1.25vw, 1.65rem);
+    font-size: clamp(1.02rem, 1.25vw, 1.45rem);
     font-weight: 700;
     line-height: 1.24;
     text-align: right;
@@ -231,6 +259,15 @@ const contact = {
   .nav-link {
     min-height: 1.65rem;
     letter-spacing: 0;
+  }
+
+  .nav-link:hover {
+    color: var(--ink);
+  }
+
+  .nav-link.active {
+    color: var(--ink);
+    border-bottom: 2px solid var(--ink);
   }
 
   .lotus {
@@ -286,21 +323,14 @@ const contact = {
       overflow: hidden;
     }
 
-    .brand {
+    .brand-wrapper {
       top: clamp(7rem, 8.1vh, 10rem);
-      width: min(45vw, 18rem);
-      min-width: 15rem;
+      padding: 0;
     }
 
-    .site-nav {
-      top: 44.5%;
-      right: 50%;
-      align-items: center;
-      gap: clamp(0.72rem, 1.55vh, 1.2rem);
-      transform: translate(50%, -50%);
-      font-size: clamp(1.8rem, 4.7vw, 3rem);
-      line-height: 1.12;
-      text-align: center;
+    .brand {
+      width: min(80vw, 32rem);
+      min-width: 22rem;
     }
 
     .nav-link {
