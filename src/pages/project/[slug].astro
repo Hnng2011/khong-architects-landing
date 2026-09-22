@@ -1,5 +1,5 @@
 ---
-import RouteLoading from "../../components/RouteLoading.astro";
+import Layout from "../../layouts/Layout.astro";
 import { projects } from "../../data/projects.js";
 
 export function getStaticPaths() {
@@ -18,60 +18,15 @@ export function getStaticPaths() {
 }
 
 const { project, prevProject, nextProject } = Astro.props;
-
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Project", href: "/project/" },
-  { label: "Concept", href: "/concept/" },
-  { label: "Prize", href: "/prize/" },
-];
-
-const contact = {
-  address: "93/10 No Trang Long, Binh Loi Trung Ward, Ho Chi Minh City, Viet Nam",
-  phone: "0913 771 489",
-  email: "khongarch@gmail.com",
-};
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta
-      name="description"
-      content={`${project.title} - Architectural project by KHONG architects in Ho Chi Minh City, Viet Nam.`}
-    />
-    <meta name="robots" content="noindex, follow" />
-    <meta name="theme-color" content="#ffffff" />
-    <meta name="color-scheme" content="light" />
-    <link rel="canonical" href={`https://khongvietnam.com/project/${project.slug}/`} />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-    <link rel="manifest" href="/manifest.json" />
-
-    <meta property="og:type" content="article" />
-    <meta property="og:site_name" content="KHONG architects" />
-    <meta property="og:title" content={`${project.title} | KHONG architects`} />
-    <meta
-      property="og:description"
-      content={`${project.title} - Architectural project by KHONG architects.`}
-    />
-    <meta property="og:image" content={project.thumbnail} />
-    <meta property="og:url" content={`https://khongvietnam.com/project/${project.slug}/`} />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content={`${project.title} | KHONG architects`} />
-    <meta
-      name="twitter:description"
-      content={`${project.title} - Architectural project by KHONG architects.`}
-    />
-    <meta name="twitter:image" content={project.thumbnail} />
-
-    <link rel="preload" href="/hotlink-ok/khong-logo.png" as="image" />
-    <title>{project.title} | KHONG architects</title>
-
+<Layout
+  title={`${project.title} | KHONG architects`}
+  description={`${project.title} - Architectural project by KHONG architects in Ho Chi Minh City, Viet Nam.`}
+  canonicalPath={`/project/${project.slug}/`}
+  active="Project"
+>
+  <Fragment slot="structured-data">
     <script type="application/ld+json" set:html={JSON.stringify({
       "@context": "https://schema.org",
       "@type": "CreativeWork",
@@ -88,374 +43,213 @@ const contact = {
         "name": project.info.address
       }
     })} />
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+  </Fragment>
 
-    <header class="header">
-      <a class="brand-link" href="/" aria-label="KHONG architects home">
-        <img
-          class="brand-logo"
-          src="/hotlink-ok/khong-logo.png"
-          alt="KHONG architects"
-          width="720"
-          height="711"
-          decoding="async"
-          fetchpriority="high"
-        />
-      </a>
+  <div class="detail-container">
+    <div class="project-detail-grid">
+      <!-- Description cell -->
+      <div class="project-desc-cell">
+        <h1 class="project-title">{project.title}</h1>
 
-      <nav class="site-nav" aria-label="Primary navigation">
-        {
-          navItems.map((item) => (
-            <a class="nav-link" href={item.href}>
-              {item.label}
-            </a>
-          ))
-        }
-      </nav>
-    </header>
-
-    <main id="main" class="detail-container">
-      <div class="detail-layout-wrapper">
-        <div class="layout-left-spacer"></div>
-        <div class="project-detail-grid">
-          {/* Description Cell */}
-          <div class="project-desc-cell">
-            <h1 class="project-title">{project.title}</h1>
-            
-            <div class="project-info-block">
-              <h2 class="section-subtitle">Thông tin dự án:</h2>
-              <ul class="info-list">
-                <li><strong>Địa chỉ:</strong> {project.info.address}</li>
-                <li class="info-meta-row">
-                  <span><strong>Diện tích:</strong> {project.info.area}</span>
-                  <span><strong>Năm hoàn thành:</strong> {project.info.year}</span>
-                </li>
-              </ul>
-            </div>
-
-            <div class="project-desc-block">
-              <h2 class="section-subtitle">Thuyết minh dự án:</h2>
-              <p class="description-text">{project.description}</p>
-            </div>
-          </div>
-
-          {/* Image Cells */}
-          {project.images.map((imgUrl, i) => (
-            <div class="image-cell">
-              <img
-                src={imgUrl}
-                alt={`${project.title} image view ${i + 1}`}
-                loading={i < 2 ? "eager" : "lazy"}
-                decoding="async"
-              />
-            </div>
-          ))}
+        <div class="project-info-block">
+          <h2 class="section-subtitle">Thông tin dự án:</h2>
+          <ul class="info-list">
+            <li><strong>Địa chỉ:</strong> {project.info.address}</li>
+            <li class="info-meta-row">
+              <span><strong>Diện tích:</strong> {project.info.area}</span>
+              <span><strong>Năm hoàn thành:</strong> {project.info.year}</span>
+            </li>
+          </ul>
         </div>
-        <div class="layout-right-spacer"></div>
-      </div>
-    </main>
 
-    <footer class="contact" aria-label="Studio contact information">
-      <address>
-        <span>Address: {contact.address}</span>
-        <span aria-hidden="true">/</span>
-        <a href={`tel:${contact.phone.replaceAll(" ", "")}`}>Phone: {contact.phone}</a>
-        <span aria-hidden="true">/</span>
-        <a href={`mailto:${contact.email}`}>Email: {contact.email}</a>
-      </address>
-    </footer>
+        <div class="project-desc-block">
+          <h2 class="section-subtitle">Thuyết minh dự án:</h2>
+          <p class="description-text">{project.description}</p>
+        </div>
 
-    <!-- Lightbox Modal -->
-    <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
-      <button class="lightbox-close" aria-label="Close preview">&times;</button>
-      <button class="lightbox-prev" aria-label="Previous image">&#10094;</button>
-      <button class="lightbox-next" aria-label="Next image">&#10095;</button>
-      <div class="lightbox-content">
-        <img id="lightbox-img" src="" alt="Preview image" />
+        <nav class="project-pager" aria-label="Project navigation">
+          <a href={`/project/${prevProject.slug}/`}>← {prevProject.title}</a>
+          <a href="/project/">All projects</a>
+          <a href={`/project/${nextProject.slug}/`}>{nextProject.title} →</a>
+        </nav>
       </div>
+
+      <!-- Image cells -->
+      {
+        project.images.map((imgUrl, i) => (
+          <div class="image-cell">
+            <img
+              src={imgUrl}
+              alt={`${project.title} image view ${i + 1}`}
+              loading={i < 2 ? "eager" : "lazy"}
+              decoding="async"
+            />
+          </div>
+        ))
+      }
     </div>
+  </div>
 
-    <RouteLoading />
+  <!-- Lightbox Modal -->
+  <div id="lightbox" class="lightbox" aria-hidden="true" role="dialog" aria-label="Image preview">
+    <button class="lightbox-close" aria-label="Close preview">&times;</button>
+    <button class="lightbox-prev" aria-label="Previous image">&#10094;</button>
+    <button class="lightbox-next" aria-label="Next image">&#10095;</button>
+    <div class="lightbox-content">
+      <img id="lightbox-img" src="" alt="Preview image" />
+    </div>
+  </div>
 
-    <script>
-      // 1. Dynamic Description Spanning (Vertical)
-      function adjustDescSpan() {
-        const grid = document.querySelector(".project-detail-grid");
-        const desc = document.querySelector(".project-desc-cell");
-        if (!(grid instanceof HTMLElement) || !(desc instanceof HTMLElement)) return;
+  <script>
+    // 1. Dynamic Description Spanning (Vertical)
+    function adjustDescSpan() {
+      const grid = document.querySelector(".project-detail-grid");
+      const desc = document.querySelector(".project-desc-cell");
+      if (!(grid instanceof HTMLElement) || !(desc instanceof HTMLElement)) return;
 
-        const isDesktop = window.innerWidth > 1024;
-        if (!isDesktop) {
-          desc.style.gridRowEnd = "";
-          return;
-        }
-
-        desc.style.gridRowEnd = "span 1";
-
-        const gridStyles = window.getComputedStyle(grid);
-        const gridWidth = grid.clientWidth;
-        const columns = 4;
-        const gap = parseFloat(gridStyles.gap) || 0;
-
-        const cellHeight = (gridWidth - (columns - 1) * gap) / columns;
-        if (cellHeight <= 0) return;
-
-        const descHeight = desc.scrollHeight;
-        
-        const span = Math.ceil((descHeight + 10) / (cellHeight + gap));
-        desc.style.gridRowEnd = `span ${span}`;
+      const isDesktop = window.innerWidth > 1024;
+      if (!isDesktop) {
+        desc.style.gridRowEnd = "";
+        return;
       }
 
-      window.addEventListener("load", adjustDescSpan);
-      window.addEventListener("resize", adjustDescSpan);
-      window.addEventListener("pageshow", adjustDescSpan);
-      
-      if (document.readyState === "complete") {
-        adjustDescSpan();
-      } else {
-        window.addEventListener("DOMContentLoaded", adjustDescSpan);
+      desc.style.gridRowEnd = "span 1";
+
+      const gridStyles = window.getComputedStyle(grid);
+      const gridWidth = grid.clientWidth;
+      const columns = 4;
+      const gap = parseFloat(gridStyles.gap) || 0;
+
+      const cellHeight = (gridWidth - (columns - 1) * gap) / columns;
+      if (cellHeight <= 0) return;
+
+      const descHeight = desc.scrollHeight;
+
+      const span = Math.ceil((descHeight + 10) / (cellHeight + gap));
+      desc.style.gridRowEnd = `span ${span}`;
+    }
+
+    window.addEventListener("load", adjustDescSpan);
+    window.addEventListener("resize", adjustDescSpan);
+    window.addEventListener("pageshow", adjustDescSpan);
+
+    if (document.readyState === "complete") {
+      adjustDescSpan();
+    } else {
+      window.addEventListener("DOMContentLoaded", adjustDescSpan);
+    }
+
+    // 2. Lightbox Functionality
+    function initLightbox() {
+      const lightbox = document.getElementById("lightbox");
+      const lightboxImg = document.getElementById("lightbox-img");
+      const closeBtn = document.querySelector(".lightbox-close");
+      const prevBtn = document.querySelector(".lightbox-prev");
+      const nextBtn = document.querySelector(".lightbox-next");
+      const images = Array.from(document.querySelectorAll(".image-cell img"));
+
+      if (!lightbox || !lightboxImg || !closeBtn || !prevBtn || !nextBtn || images.length === 0) return;
+
+      let currentIndex = 0;
+
+      function openLightbox(index: number) {
+        if (index < 0 || index >= images.length) return;
+        currentIndex = index;
+        const img = images[currentIndex];
+        if (!(img instanceof HTMLImageElement) || !(lightboxImg instanceof HTMLImageElement)) return;
+
+        lightboxImg.src = img.src;
+        lightboxImg.alt = img.alt || "Preview image";
+        lightbox.setAttribute("aria-hidden", "false");
+        document.body.style.overflow = "hidden";
       }
 
-      // 2. Lightbox Functionality
-      function initLightbox() {
-        const lightbox = document.getElementById("lightbox");
-        const lightboxImg = document.getElementById("lightbox-img");
-        const closeBtn = document.querySelector(".lightbox-close");
-        const prevBtn = document.querySelector(".lightbox-prev");
-        const nextBtn = document.querySelector(".lightbox-next");
-        const images = Array.from(document.querySelectorAll(".image-cell img"));
-
-        if (!lightbox || !lightboxImg || !closeBtn || !prevBtn || !nextBtn || images.length === 0) return;
-
-        let currentIndex = 0;
-
-        function openLightbox(index) {
-          if (index < 0 || index >= images.length) return;
-          currentIndex = index;
-          const img = images[currentIndex];
-          if (!(img instanceof HTMLImageElement) || !(lightboxImg instanceof HTMLImageElement)) return;
-
-          lightboxImg.src = img.src;
-          lightboxImg.alt = img.alt || "Preview image";
-          lightbox.setAttribute("aria-hidden", "false");
-          document.body.style.overflow = "hidden";
-        }
-
-        function closeLightbox() {
-          lightbox.setAttribute("aria-hidden", "true");
-          document.body.style.overflow = "";
-          // Clear source after transition to prevent flicker on next open
-          setTimeout(() => {
-            if (lightbox.getAttribute("aria-hidden") === "true") {
-              if (lightboxImg instanceof HTMLImageElement) {
-                lightboxImg.src = "";
-              }
+      function closeLightbox() {
+        lightbox!.setAttribute("aria-hidden", "true");
+        document.body.style.overflow = "";
+        setTimeout(() => {
+          if (lightbox!.getAttribute("aria-hidden") === "true") {
+            if (lightboxImg! instanceof HTMLImageElement) {
+              lightboxImg!.src = "";
             }
-          }, 350);
-        }
-
-        function showNext() {
-          const nextIndex = (currentIndex + 1) % images.length;
-          openLightbox(nextIndex);
-        }
-
-        function showPrev() {
-          const prevIndex = (currentIndex - 1 + images.length) % images.length;
-          openLightbox(prevIndex);
-        }
-
-        images.forEach((img, index) => {
-          if (img instanceof HTMLImageElement) {
-            img.addEventListener("click", () => {
-              openLightbox(index);
-            });
           }
-        });
+        }, 350);
+      }
 
-        closeBtn.addEventListener("click", closeLightbox);
-        prevBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          showPrev();
-        });
-        nextBtn.addEventListener("click", (e) => {
-          e.stopPropagation();
-          showNext();
-        });
-        
-        lightbox.addEventListener("click", (e) => {
-          if (e.target === lightbox || e.target === lightbox.querySelector(".lightbox-content") || e.target === lightboxImg) {
+      function showNext() {
+        openLightbox((currentIndex + 1) % images.length);
+      }
+
+      function showPrev() {
+        openLightbox((currentIndex - 1 + images.length) % images.length);
+      }
+
+      images.forEach((img, index) => {
+        if (img instanceof HTMLImageElement) {
+          img.addEventListener("click", () => {
+            openLightbox(index);
+          });
+        }
+      });
+
+      closeBtn.addEventListener("click", closeLightbox);
+      prevBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showPrev();
+      });
+      nextBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        showNext();
+      });
+
+      lightbox.addEventListener("click", (e) => {
+        if (e.target === lightbox || e.target === lightbox.querySelector(".lightbox-content") || e.target === lightboxImg) {
+          closeLightbox();
+        }
+      });
+
+      document.addEventListener("keydown", (e) => {
+        if (lightbox!.getAttribute("aria-hidden") === "false") {
+          if (e.key === "Escape") {
             closeLightbox();
+          } else if (e.key === "ArrowRight") {
+            showNext();
+          } else if (e.key === "ArrowLeft") {
+            showPrev();
           }
-        });
+        }
+      });
+    }
 
-        document.addEventListener("keydown", (e) => {
-          if (lightbox.getAttribute("aria-hidden") === "false") {
-            if (e.key === "Escape") {
-              closeLightbox();
-            } else if (e.key === "ArrowRight") {
-              showNext();
-            } else if (e.key === "ArrowLeft") {
-              showPrev();
-            }
-          }
-        });
-      }
-
-      window.addEventListener("load", initLightbox);
-      window.addEventListener("pageshow", initLightbox);
-      if (document.readyState === "complete") {
-        initLightbox();
-      } else {
-        window.addEventListener("DOMContentLoaded", initLightbox);
-      }
-    </script>
-  </body>
-</html>
+    window.addEventListener("load", initLightbox);
+    window.addEventListener("pageshow", initLightbox);
+    if (document.readyState === "complete") {
+      initLightbox();
+    } else {
+      window.addEventListener("DOMContentLoaded", initLightbox);
+    }
+  </script>
+</Layout>
 
 <style is:global>
-  :root {
-    --paper: #ffffff;
-    --ink: #1b1b1b;
-    --soft-ink: #6f6f6f;
-    --focus: #a00000;
-    --font-mono: "Courier New", Courier, monospace;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    min-width: 320px;
-    background: var(--paper);
-    font-family: var(--font-mono);
-    text-size-adjust: 100%;
+  .detail-container {
+    flex: 1;
+    width: 100%;
+    max-width: 1800px;
+    margin: 0 auto;
+    padding: 0.5rem min(15vw, 8rem) clamp(3rem, 6vh, 5rem);
+    /* page fits 100vh; long content scrolls inside this container only */
+    min-height: 0;
+    overflow-y: auto;
     scrollbar-width: none;
   }
 
-  html::-webkit-scrollbar {
+  .detail-container::-webkit-scrollbar {
     display: none;
-  }
-
-  body {
-    min-height: 100svh;
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    display: flex;
-    flex-direction: column;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  a:hover {
-    color: var(--soft-ink);
-  }
-
-  a:focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 0.32rem;
-  }
-
-  .skip-link {
-    position: fixed;
-    z-index: 8;
-    top: 1rem;
-    left: 1rem;
-    transform: translateY(-160%);
-    border: 1px solid var(--ink);
-    background: var(--paper);
-    padding: 0.55rem 0.8rem;
-    color: var(--ink);
-    font-size: 0.95rem;
-  }
-
-  .skip-link:focus {
-    transform: translateY(0);
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* Header style */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: clamp(1.5rem, 3vh, 2rem) 0 0.5rem 0;
-    position: relative;
-    z-index: 10;
-    max-width: 1800px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .brand-link {
-    display: block;
-    width: min(30vw, 16rem);
-    min-width: 10rem;
-  }
-
-  .brand-logo {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-
-  .site-nav {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.28rem;
-    color: var(--soft-ink);
-    font-size: clamp(1.02rem, 1.25vw, 1.45rem);
-    font-weight: 700;
-    line-height: 1.24;
-    text-align: right;
-  }
-
-  .nav-link {
-    min-height: 1.65rem;
-    letter-spacing: 0;
-  }
-
-  /* Main Container */
-  .detail-container {
-    flex: 1;
-    padding: 0.5rem 0 clamp(4rem, 8vh, 6rem);
-    max-width: 1800px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .detail-layout-wrapper {
-    display: flex;
-    gap: 0;
-    width: 100%;
-  }
-
-  .layout-left-spacer,
-  .layout-right-spacer {
-    width: min(15vw, 8rem);
-    flex-shrink: 0;
   }
 
   /* Grid Layout Detail */
   .project-detail-grid {
-    flex: 1;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: clamp(1rem, 2vw, 2rem);
@@ -466,29 +260,24 @@ const contact = {
   .project-desc-cell {
     grid-column: 1 / 3;
     grid-row-start: 1;
-    background: transparent;
-    padding: 0 1.5rem 1.5rem 0;
+    padding-right: 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: clamp(1.5rem, 3vh, 2rem);
+    gap: clamp(1.25rem, 3vh, 2rem);
     justify-content: flex-start;
   }
 
   .project-title {
-    font-family: var(--font-mono);
-    font-size: clamp(1.8rem, 3vw, 2.8rem);
+    font-size: clamp(1.7rem, 2.8vw, 2.6rem);
     font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 0;
-    line-height: 1.1;
+    margin: 0;
+    line-height: 1.15;
   }
 
   .section-subtitle {
-    font-family: var(--font-mono);
-    font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+    font-size: clamp(0.92rem, 1.05vw, 1.12rem);
     font-weight: 700;
-    margin-top: 0;
-    margin-bottom: 0.8rem;
+    margin: 0 0 0.75rem;
     color: var(--ink);
   }
 
@@ -497,7 +286,7 @@ const contact = {
     padding: 0;
     margin: 0;
     font-size: clamp(0.85rem, 0.95vw, 1rem);
-    line-height: 1.6;
+    line-height: 1.65;
     color: var(--soft-ink);
   }
 
@@ -514,15 +303,38 @@ const contact = {
     gap: 1rem;
   }
 
-  .info-list strong {
+  .info-list strong,
+  .description-text strong {
     color: var(--ink);
   }
 
   .description-text {
     font-size: clamp(0.85rem, 0.95vw, 1rem);
-    line-height: 1.6;
+    line-height: 1.7;
     color: var(--soft-ink);
     margin: 0;
+    white-space: pre-line;
+  }
+
+  .project-pager {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-top: auto;
+    padding-top: clamp(1rem, 2vh, 1.5rem);
+    border-top: 1px solid var(--hairline);
+    color: var(--soft-ink);
+    font-size: clamp(0.78rem, 0.9vw, 0.95rem);
+    font-weight: 700;
+  }
+
+  .project-pager a {
+    transition: color 140ms ease;
+  }
+
+  .project-pager a:hover {
+    color: var(--ink);
   }
 
   .image-cell {
@@ -530,7 +342,7 @@ const contact = {
     aspect-ratio: 1 / 1;
     overflow: hidden;
     background: #f5f5f5;
-    border: 1px solid #e0e0e0;
+    border: 1px solid #e6e6e6;
     cursor: pointer;
   }
 
@@ -546,68 +358,21 @@ const contact = {
     transform: scale(1.03);
   }
 
-  /* Footer style */
-  .contact {
-    padding: clamp(1rem, 3vh, 2rem) 1rem;
-    background: transparent;
-    color: #646464;
-    font-family: var(--font-mono);
-    font-size: clamp(0.68rem, 0.82vw, 0.95rem);
-    line-height: 1.35;
-    text-align: center;
-    border-top: 1px solid #f0f0f0;
-    margin-top: auto;
-  }
-
-  .contact address {
-    display: flex;
-    justify-content: center;
-    gap: clamp(0.55rem, 1vw, 1.2rem);
-    margin: 0;
-    font-style: normal;
-    white-space: nowrap;
-  }
-
-  .contact a:hover {
-    color: var(--ink);
-  }
-
-  /* Responsive Design */
+  /* ── Responsive ── */
   @media (max-width: 1024px) {
-    .detail-layout-wrapper {
-      flex-direction: column;
+    .detail-container {
+      padding-left: clamp(1.25rem, 4vw, 3rem);
+      padding-right: clamp(1.25rem, 4vw, 3rem);
     }
-    .layout-left-spacer,
-    .layout-right-spacer {
-      display: none;
-    }
+
     .project-detail-grid {
       grid-template-columns: repeat(2, 1fr);
     }
+
     .project-desc-cell {
       grid-column: 1 / -1;
       grid-row-end: auto !important;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .header {
-      padding: 1.5rem 1.5rem 0.5rem;
-    }
-
-    .detail-container {
-      padding: 0 1.5rem 4rem;
-    }
-
-    .contact address {
-      flex-direction: column;
-      align-items: center;
-      gap: 0.25rem;
-      white-space: normal;
-    }
-
-    .contact span[aria-hidden="true"] {
-      display: none;
+      padding-right: 0;
     }
   }
 
@@ -615,9 +380,14 @@ const contact = {
     .project-detail-grid {
       grid-template-columns: 1fr;
     }
+
+    .project-pager {
+      flex-direction: column;
+      align-items: center;
+    }
   }
 
-  /* Lightbox Styles */
+  /* ── Lightbox ── */
   .lightbox {
     position: fixed;
     inset: 0;
@@ -643,6 +413,7 @@ const contact = {
     right: 2rem;
     background: transparent;
     border: none;
+    font-family: var(--font-site);
     font-size: 2.5rem;
     font-weight: 200;
     color: #ffffff;
@@ -664,6 +435,7 @@ const contact = {
     transform: translateY(-50%);
     background: transparent;
     border: none;
+    font-family: var(--font-site);
     color: #ffffff;
     font-size: clamp(2rem, 4vw, 3.5rem);
     cursor: pointer;
@@ -680,23 +452,8 @@ const contact = {
     transform: translateY(-50%) scale(1.15);
   }
 
-  .lightbox-prev {
-    left: 1.5rem;
-  }
-
-  .lightbox-next {
-    right: 1.5rem;
-  }
-
-  @media (max-width: 768px) {
-    .lightbox-prev,
-    .lightbox-next {
-      padding: 0.75rem;
-      font-size: 2rem;
-    }
-    .lightbox-prev { left: 0.5rem; }
-    .lightbox-next { right: 0.5rem; }
-  }
+  .lightbox-prev { left: 1.5rem; }
+  .lightbox-next { right: 1.5rem; }
 
   .lightbox-content {
     max-width: 90vw;
@@ -717,5 +474,16 @@ const contact = {
     max-height: 85vh;
     object-fit: contain;
     box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  }
+
+  @media (max-width: 768px) {
+    .lightbox-prev,
+    .lightbox-next {
+      padding: 0.75rem;
+      font-size: 2rem;
+    }
+
+    .lightbox-prev { left: 0.5rem; }
+    .lightbox-next { right: 0.5rem; }
   }
 </style>

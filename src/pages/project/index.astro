@@ -1,416 +1,148 @@
 ---
-import RouteLoading from "../../components/RouteLoading.astro";
+import Layout from "../../layouts/Layout.astro";
 import { projects } from "../../data/projects.js";
-
-const navItems = [
-  { label: "Home", href: "/" },
-  { label: "Project", href: "/project/" },
-  { label: "Concept", href: "/concept/" },
-  { label: "Prize", href: "/prize/" },
-];
-
-const contact = {
-  address: "93/10 No Trang Long, Binh Loi Trung Ward, Ho Chi Minh City, Viet Nam",
-  phone: "0913 771 489",
-  email: "khongarch@gmail.com",
-};
 ---
 
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-    <meta
-      name="description"
-      content="Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
-    />
-    <meta name="robots" content="noindex, follow" />
-    <meta name="theme-color" content="#ffffff" />
-    <meta name="color-scheme" content="light" />
-    <link rel="canonical" href="https://khongvietnam.com/project/" />
-    <link rel="icon" href="/favicon.ico" sizes="any" />
-    <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
-    <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
-    <link rel="manifest" href="/manifest.json" />
+<Layout
+  title="Projects | KHONG architects"
+  description="Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
+  canonicalPath="/project/"
+  active="Project"
+>
+  <Fragment slot="structured-data">
+    <script type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "Projects | KHONG architects",
+      "url": "https://khongvietnam.com/project/",
+      "description": "Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
+    })} />
+  </Fragment>
 
-    <meta property="og:type" content="website" />
-    <meta property="og:site_name" content="KHONG architects" />
-    <meta property="og:title" content="Projects | KHONG architects" />
-    <meta
-      property="og:description"
-      content="Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
-    />
-    <meta property="og:image" content="https://khongvietnam.com/hotlink-ok/og-image.jpg" />
-    <meta property="og:url" content="https://khongvietnam.com/project/" />
+  <div class="project-container">
+    <h1 class="sr-only">Our Projects</h1>
 
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="Projects | KHONG architects" />
-    <meta
-      name="twitter:description"
-      content="Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
-    />
-    <meta name="twitter:image" content="https://khongvietnam.com/hotlink-ok/og-image.jpg" />
-
-    <link rel="preload" href="/hotlink-ok/khong-logo.png" as="image" />
-    <title>Projects | KHONG architects</title>
-
-    <script type="application/ld+json">
+    <div class="projects-grid" aria-label="Project list">
       {
-        "@context": "https://schema.org",
-        "@type": "CollectionPage",
-        "name": "Projects | KHONG architects",
-        "url": "https://khongvietnam.com/project/",
-        "description": "Explore architectural projects by KHONG architects in Ho Chi Minh City, Viet Nam."
+        projects.map((project, index) => (
+          <a class="project-card" href={`/project/${project.slug}/`} aria-label={`View ${project.title}`}>
+            <div class="project-image-wrapper">
+              <img
+                class="project-image"
+                src={project.thumbnail}
+                alt={project.title}
+                loading="lazy"
+                decoding="async"
+              />
+              <div class="project-card-overlay">
+                <span class="project-number">{(index + 1).toString().padStart(2, "0")}</span>
+                <h2 class="project-title">{project.title}</h2>
+              </div>
+            </div>
+          </a>
+        ))
       }
-    </script>
-  </head>
-  <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    </div>
 
-    <header class="header">
-      <a class="brand-link" href="/" aria-label="KHONG architects home">
-        <img
-          class="brand-logo"
-          src="/hotlink-ok/khong-logo.png"
-          alt="KHONG architects"
-          width="720"
-          height="711"
-          decoding="async"
-          fetchpriority="high"
-        />
-      </a>
-
-      <nav class="site-nav" aria-label="Primary navigation">
-        {
-          navItems.map((item) => (
-            <a class={`nav-link ${item.label === "Project" ? "active" : ""}`} href={item.href}>
-              {item.label}
-            </a>
-          ))
-        }
-      </nav>
-    </header>
-
-    <main id="main" class="project-container">
-      <h1 class="sr-only">Our Projects</h1>
-
-      <div class="list-layout-wrapper">
-        <div class="layout-left-spacer"></div>
-        <div class="projects-grid">
-          {
-            projects.map((project, index) => (
-              <a class="project-card" href={`/project/${project.slug}/`} aria-label={`View ${project.title}`}>
-                <div class="project-image-wrapper">
-                  <img
-                    class="project-image"
-                    src={project.thumbnail}
-                    alt={project.title}
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div class="project-card-overlay">
-                    <span class="project-number">{(index + 1).toString().padStart(2, "0")}</span>
-                    <h2 class="project-title">{project.title}</h2>
-                  </div>
-                </div>
-              </a>
-            ))
-          }
-        </div>
-        <div class="layout-right-spacer"></div>
+    <div class="scroll-status-wrapper">
+      <span class="scroll-number">01</span>
+      <div class="scroll-progress-container">
+        <div class="scroll-progress-bar" id="scroll-progress"></div>
       </div>
+      <span class="scroll-number" id="scroll-total-count">{projects.length.toString().padStart(2, "0")}</span>
+    </div>
+  </div>
 
-      <div class="scroll-status-wrapper">
-        <span class="scroll-number">01</span>
-        <div class="scroll-progress-container">
-          <div class="scroll-progress-bar" id="scroll-progress"></div>
-        </div>
-        <span class="scroll-number" id="scroll-total-count">{projects.length.toString().padStart(2, '0')}</span>
-      </div>
-    </main>
+  <script>
+    function initScrollProgress() {
+      const grid = document.querySelector(".projects-grid");
+      const progressContainer = document.querySelector(".scroll-status-wrapper");
+      const bar = document.getElementById("scroll-progress");
+      if (!(grid instanceof HTMLElement) || !(progressContainer instanceof HTMLElement) || !(bar instanceof HTMLElement)) return;
 
-    <footer class="contact" aria-label="Studio contact information">
-      <address>
-        <span>Address: {contact.address}</span>
-        <span aria-hidden="true">/</span>
-        <a href={`tel:${contact.phone.replaceAll(" ", "")}`}>Phone: {contact.phone}</a>
-        <span aria-hidden="true">/</span>
-        <a href={`mailto:${contact.email}`}>Email: {contact.email}</a>
-      </address>
-    </footer>
+      const total = grid.scrollWidth - grid.clientWidth;
 
-    <RouteLoading />
+      // Translate vertical wheel scroll to horizontal card-by-card snap scroll
+      let isThrottled = false;
+      grid.addEventListener("wheel", (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          if (isThrottled) return;
+          isThrottled = true;
+          setTimeout(() => { isThrottled = false; }, 400);
 
-    <script>
-      function initScrollProgress() {
-        const grid = document.querySelector(".projects-grid");
-        const progressContainer = document.querySelector(".scroll-status-wrapper");
-        const bar = document.getElementById("scroll-progress");
-        if (!(grid instanceof HTMLElement) || !(progressContainer instanceof HTMLElement) || !(bar instanceof HTMLElement)) return;
+          const card = grid.querySelector(".project-card");
+          if (!card) return;
+          const cardWidth = card.clientWidth;
+          const gap = parseFloat(window.getComputedStyle(grid).gap) || 0;
+          const step = cardWidth + gap;
 
-        const total = grid.scrollWidth - grid.clientWidth;
-
-        // Translate vertical wheel scroll to horizontal card-by-card snap scroll
-        let isThrottled = false;
-        grid.addEventListener("wheel", (e) => {
-          if (e.deltaY !== 0) {
-            e.preventDefault();
-            if (isThrottled) return;
-            isThrottled = true;
-            setTimeout(() => { isThrottled = false; }, 400);
-
-            const card = grid.querySelector(".project-card");
-            if (!card) return;
-            const cardWidth = card.clientWidth;
-            const gap = parseFloat(window.getComputedStyle(grid).gap) || 0;
-            const step = cardWidth + gap;
-
-            if (e.deltaY > 0) {
-              grid.scrollBy({ left: step, behavior: "smooth" });
-            } else {
-              grid.scrollBy({ left: -step, behavior: "smooth" });
-            }
-          }
-        }, { passive: false });
-
-        const barWidth = 30; // matches CSS width
-
-        function updateProgress() {
-          const scrollTotal = grid.scrollWidth - grid.clientWidth;
-          if (scrollTotal <= 0) {
-            progressContainer.style.display = "none";
+          if (e.deltaY > 0) {
+            grid.scrollBy({ left: step, behavior: "smooth" });
           } else {
-            progressContainer.style.display = "flex";
-            const ratio = grid.scrollLeft / scrollTotal;
-            const containerWidth = bar.parentElement ? bar.parentElement.clientWidth : 100;
-            const maxLeft = containerWidth - barWidth;
-            const leftPos = ratio * maxLeft;
-            bar.style.left = `${leftPos}px`;
+            grid.scrollBy({ left: -step, behavior: "smooth" });
           }
         }
+      }, { passive: false });
 
-        if (total <= 0) {
-          progressContainer.style.display = "none";
-        } else {
-          progressContainer.style.display = "flex";
-          updateProgress();
-          grid.addEventListener("scroll", updateProgress);
+      const barWidth = 30; // matches CSS width
+
+      function updateProgress() {
+        const scrollTotal = grid!.scrollWidth - grid!.clientWidth;
+        if (scrollTotal <= 0) {
+          progressContainer!.style.display = "none";
+          return;
         }
+        progressContainer!.style.display = "flex";
+        const ratio = grid!.scrollLeft / scrollTotal;
+        const containerWidth = bar!.parentElement ? bar!.parentElement.clientWidth : 100;
+        const maxLeft = containerWidth - barWidth;
+        bar!.style.left = `${ratio * maxLeft}px`;
       }
 
-      window.addEventListener("load", initScrollProgress);
-      window.addEventListener("resize", initScrollProgress);
-      window.addEventListener("pageshow", initScrollProgress);
-      if (document.readyState === "complete") {
-        initScrollProgress();
+      if (total <= 0) {
+        progressContainer.style.display = "none";
       } else {
-        window.addEventListener("DOMContentLoaded", initScrollProgress);
+        progressContainer.style.display = "flex";
+        updateProgress();
+        grid.addEventListener("scroll", updateProgress);
       }
-    </script>
-  </body>
-</html>
+    }
+
+    window.addEventListener("load", initScrollProgress);
+    window.addEventListener("resize", initScrollProgress);
+    window.addEventListener("pageshow", initScrollProgress);
+    if (document.readyState === "complete") {
+      initScrollProgress();
+    } else {
+      window.addEventListener("DOMContentLoaded", initScrollProgress);
+    }
+  </script>
+</Layout>
 
 <style is:global>
-  :root {
-    --paper: #ffffff;
-    --ink: #1b1b1b;
-    --soft-ink: #6f6f6f;
-    --focus: #a00000;
-    --font-mono: "Courier New", Courier, monospace;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    min-width: 320px;
-    background: var(--paper);
-    font-family: var(--font-mono);
-    text-size-adjust: 100%;
-  }
-
-  body {
-    height: 100vh;
-    height: 100svh;
-    margin: 0;
-    background: var(--paper);
-    color: var(--ink);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  a:focus-visible {
-    outline: 2px solid var(--focus);
-    outline-offset: 0.32rem;
-  }
-
-  .skip-link {
-    position: fixed;
-    z-index: 8;
-    top: 1rem;
-    left: 1rem;
-    transform: translateY(-160%);
-    border: 1px solid var(--ink);
-    background: var(--paper);
-    padding: 0.55rem 0.8rem;
-    color: var(--ink);
-    font-size: 0.95rem;
-  }
-
-  .skip-link:focus {
-    transform: translateY(0);
-  }
-
-  .sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0 0 0 0);
-    white-space: nowrap;
-    border: 0;
-  }
-
-  /* Header style */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: clamp(1.5rem, 3vh, 2rem) 0 0.5rem 0;
-    position: relative;
-    z-index: 10;
-    max-width: 1800px;
-    margin: 0 auto;
-    width: 100%;
-  }
-
-  .brand-link {
-    display: block;
-    width: min(30vw, 16rem);
-    min-width: 10rem;
-  }
-
-  .brand-logo {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
-  }
-
-  .site-nav {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 0.28rem;
-    color: var(--soft-ink);
-    font-size: clamp(1.02rem, 1.25vw, 1.45rem);
-    font-weight: 700;
-    line-height: 1.24;
-    text-align: right;
-  }
-
-  .nav-link {
-    min-height: 1.65rem;
-    letter-spacing: 0;
-  }
-
-  .nav-link:hover {
-    color: var(--ink);
-  }
-
-  .nav-link.active {
-    color: var(--ink);
-    border-bottom: 2px solid var(--ink);
-  }
-
-  /* Main Container */
   .project-container {
     flex: 1;
-    padding: 0 0 clamp(1rem, 2vh, 2rem);
-    overflow: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start;
-    margin-top: 0.5rem;
+    padding: 0.5rem 0 clamp(1rem, 2vh, 2rem);
+    min-height: 0; /* allow the horizontal scroller to size correctly */
   }
 
-  /* Scroll progress indicator wrapper */
-  .scroll-status-wrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 400px;
-    margin: 2.5rem auto 0 auto;
-    font-family: var(--font-mono);
-    font-size: clamp(0.75rem, 0.9vw, 0.9rem);
-    color: var(--soft-ink);
-    user-select: none;
-    flex-shrink: 0;
-  }
-
-  .scroll-progress-container {
-    flex: 1;
-    height: 1px;
-    background: #e0e0e0;
-    margin: 0 1.5rem;
-    position: relative;
-    overflow: visible;
-  }
-
-  .scroll-progress-bar {
-    position: absolute;
-    top: -1px;
-    left: 0;
-    height: 3px;
-    width: 30px;
-    background: var(--ink);
-    transition: left 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-  }
-
-  .scroll-number {
-    font-weight: 700;
-    letter-spacing: 0.05em;
-  }
-
-  .list-layout-wrapper {
-    display: flex;
-    gap: 0;
-    width: 100%;
-    overflow: hidden;
-  }
-
-  .layout-left-spacer,
-  .layout-right-spacer {
-    width: min(15vw, 8rem);
-    flex-shrink: 0;
-  }
-
-  /* Grid Layout */
+  /* ── Horizontal snap scroller ── */
   .projects-grid {
     display: flex;
     gap: clamp(1rem, 2vw, 2rem);
     width: 100%;
+    padding: 0 min(15vw, 8rem);
     overflow-x: auto;
     overflow-y: hidden;
-    padding-bottom: 1.5rem;
     scrollbar-width: none;
-    
-    /* Scroll snap settings */
     scroll-snap-type: x mandatory;
     scroll-behavior: smooth;
-    scroll-padding-left: 0;
+    scroll-padding-left: min(15vw, 8rem);
   }
 
-  /* Custom scrollbar styling */
   .projects-grid::-webkit-scrollbar {
     display: none;
   }
@@ -429,31 +161,26 @@ const contact = {
   .project-card {
     position: relative;
     display: block;
-    height: clamp(22rem, 54vh, 34rem);
+    height: clamp(20rem, 52vh, 32rem);
     aspect-ratio: 1 / 1;
     flex-shrink: 0;
     overflow: hidden;
     background: #111111;
     border: 1px solid rgba(0, 0, 0, 0.08);
     border-radius: 4px;
-    
-    /* Scroll snap align */
     scroll-snap-align: start;
-    
-    /* Reveal animation */
     opacity: 0;
     animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  /* Stagger delays */
   .project-card:nth-child(1) { animation-delay: 0.05s; }
-  .project-card:nth-child(2) { animation-delay: 0.1s; }
+  .project-card:nth-child(2) { animation-delay: 0.10s; }
   .project-card:nth-child(3) { animation-delay: 0.15s; }
-  .project-card:nth-child(4) { animation-delay: 0.2s; }
+  .project-card:nth-child(4) { animation-delay: 0.20s; }
   .project-card:nth-child(5) { animation-delay: 0.25s; }
-  .project-card:nth-child(6) { animation-delay: 0.3s; }
+  .project-card:nth-child(6) { animation-delay: 0.30s; }
   .project-card:nth-child(7) { animation-delay: 0.35s; }
-  .project-card:nth-child(8) { animation-delay: 0.4s; }
+  .project-card:nth-child(8) { animation-delay: 0.40s; }
 
   .project-image-wrapper {
     position: relative;
@@ -487,25 +214,20 @@ const contact = {
   }
 
   .project-number {
-    font-family: var(--font-mono);
     font-size: clamp(0.72rem, 0.85vw, 0.88rem);
     font-weight: 700;
     color: rgba(255, 255, 255, 0.65);
     letter-spacing: 0.12em;
     margin-bottom: 0.35rem;
-    transform: translateY(0);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), color 0.4s ease;
   }
 
   .project-title {
     margin: 0;
-    font-family: var(--font-mono);
-    font-size: clamp(1.1rem, 1.35vw, 1.4rem);
+    font-size: clamp(1.05rem, 1.3vw, 1.35rem);
     font-weight: 700;
     color: #ffffff;
-    letter-spacing: 0.02em;
     line-height: 1.25;
-    transform: translateY(0);
     transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
   }
 
@@ -518,84 +240,97 @@ const contact = {
     );
   }
 
-  .project-card:hover .project-number {
-    color: #ffffff;
+  .project-card:hover .project-number,
+  .project-card:hover .project-title {
     transform: translateY(-3px);
   }
 
-  .project-card:hover .project-title {
-    transform: translateY(-3px);
+  .project-card:hover .project-number {
+    color: #ffffff;
   }
 
   .project-card:hover .project-image {
     transform: scale(1.06);
   }
 
-
-
-  /* Footer style */
-  .contact {
-    padding: clamp(1rem, 3vh, 2rem) 1rem;
-    background: transparent;
-    color: #646464;
-    font-family: var(--font-mono);
-    font-size: clamp(0.68rem, 0.82vw, 0.95rem);
-    line-height: 1.35;
-    text-align: center;
-    border-top: 1px solid #f0f0f0;
-    margin-top: auto;
-  }
-
-  .contact address {
+  /* ── Scroll progress ── */
+  .scroll-status-wrapper {
     display: flex;
+    align-items: center;
     justify-content: center;
-    gap: clamp(0.55rem, 1vw, 1.2rem);
-    margin: 0;
-    font-style: normal;
-    white-space: nowrap;
+    width: 100%;
+    max-width: 400px;
+    margin: clamp(1.5rem, 4vh, 2.5rem) auto 0;
+    font-size: clamp(0.75rem, 0.9vw, 0.9rem);
+    color: var(--soft-ink);
+    user-select: none;
+    flex-shrink: 0;
   }
 
-  .contact a:hover {
-    color: var(--ink);
+  .scroll-progress-container {
+    flex: 1;
+    height: 1px;
+    background: #e0e0e0;
+    margin: 0 1.5rem;
+    position: relative;
+    overflow: visible;
   }
 
-  /* Responsive Design */
+  .scroll-progress-bar {
+    position: absolute;
+    top: -1px;
+    left: 0;
+    height: 3px;
+    width: 30px;
+    background: var(--ink);
+    transition: left 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .scroll-number {
+    font-weight: 700;
+    letter-spacing: 0.05em;
+  }
+
+  /* ── Responsive ── */
   @media (max-width: 1024px) {
-    .list-layout-wrapper {
-      flex-direction: column;
-    }
-    .layout-left-spacer,
-    .layout-right-spacer {
-      display: none;
-    }
     .projects-grid {
-      grid-template-columns: repeat(3, 1fr);
-      display: grid;
+      padding: 0 clamp(1rem, 4vw, 3rem);
+      scroll-padding-left: clamp(1rem, 4vw, 3rem);
+    }
+
+    .project-card {
+      height: clamp(18rem, 46vh, 28rem);
     }
   }
 
   @media (max-width: 768px) {
-    .projects-grid {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    .header {
-      padding: 1.5rem 1.5rem 0.5rem;
+    /* Mobile reference: vertical stacked cards, natural page scroll */
+    body {
+      overflow: auto;
     }
 
     .project-container {
-      padding: 0 1.5rem 4rem;
+      padding: 0 0 2rem;
+      display: block;
     }
 
-    .contact address {
-      flex-direction: column;
-      align-items: center;
-      gap: 0.25rem;
-      white-space: normal;
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(0.75rem, 2.5vw, 1.25rem);
+      padding: 0 clamp(1rem, 4vw, 2rem);
+      overflow: visible;
+      scroll-snap-type: none;
     }
 
-    .contact span[aria-hidden="true"] {
-      display: none;
+    .project-card {
+      width: 100%;
+      height: auto;
+      aspect-ratio: 1 / 1;
+    }
+
+    .scroll-status-wrapper {
+      display: none !important;
     }
   }
 
