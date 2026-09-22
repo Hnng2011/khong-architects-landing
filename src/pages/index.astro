@@ -2,7 +2,8 @@
 import Layout from "../layouts/Layout.astro";
 
 const contact = {
-  address: "93/10 No Trang Long st - Binh Loi Trung ward - Ho Chi Minh city - Viet Nam",
+  addressLine: "93/10 No Trang Long st ,Binh Loi Trung ward",
+  cityLine: "Ho Chi Minh city, Viet Nam",
   email: "khongarch@gmail.com",
 };
 ---
@@ -54,7 +55,10 @@ const contact = {
   <!-- Fixed contact line (landing keeps it pinned at the very bottom) -->
   <footer class="contact" aria-label="Studio contact information">
     <address>
-      <span>Address: {contact.address}</span>
+      <span class="contact-address">
+        <span class="address-line">Ad : {contact.addressLine}</span>
+        <span class="address-line">{contact.cityLine}</span>
+      </span>
       <span class="sep" aria-hidden="true">/</span>
       <a href={`mailto:${contact.email}`}>Email: {contact.email}</a>
     </address>
@@ -101,19 +105,21 @@ const contact = {
   .landing {
     position: relative;
     flex: 1;
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
+    display: block;
     height: calc(100svh - var(--header-h)); /* fit exactly one screen */
     overflow: hidden;
-    padding: clamp(2rem, 6vh, 4.5rem) 0 clamp(17rem, 34vh, 24rem);
+    padding: 0;
   }
 
   .brand-wrapper {
-    position: relative;
+    position: fixed;
+    /* The source logo includes transparent top padding visible in the reference crop. */
+    top: clamp(-6rem, -9vh, -4rem);
+    left: 50%;
     z-index: 4;
     display: block;
-    padding: clamp(0.6rem, 1.2vw, 1.2rem);
+    padding: 0;
+    transform: translateX(-50%);
   }
 
   /* Large on desktop, shrinks toward the mobile reference proportion */
@@ -194,6 +200,16 @@ const contact = {
     max-width: 100%;
   }
 
+  .contact-address {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+  }
+
+  .contact-address .address-line + .address-line::before {
+    content: " - ";
+  }
+
   .contact a {
     transition: color 140ms ease;
   }
@@ -207,12 +223,16 @@ const contact = {
     .landing {
       min-height: 100svh;
       height: auto;
-      padding: clamp(2rem, 8vh, 5rem) 1rem 16rem;
+      padding: 0 1rem 16rem;
       overflow: hidden;
     }
 
     .brand-wrapper {
+      position: absolute;
+      top: clamp(2rem, 7vh, 4rem);
+      left: 50%;
       padding: 0;
+      transform: translateX(-50%);
     }
 
     .brand {
@@ -234,6 +254,16 @@ const contact = {
     .contact address > span:first-child {
       max-width: min(100%, 29rem);
       line-height: 1.5;
+    }
+
+    .contact-address {
+      flex-direction: column;
+      gap: 0.15rem;
+      max-width: 100%;
+    }
+
+    .contact-address .address-line + .address-line::before {
+      content: "";
     }
 
     .contact .sep {
