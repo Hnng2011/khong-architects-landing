@@ -55,68 +55,44 @@ import { projects } from "../../data/projects.js";
 
   <script>
     function initScrollProgress() {
+      const container = document.querySelector(".project-container");
       const grid = document.querySelector(".projects-grid");
       const progressContainer = document.querySelector(".scroll-status-wrapper");
       const bar = document.getElementById("scroll-progress");
-      if (!(grid instanceof HTMLElement) || !(progressContainer instanceof HTMLElement) || !(bar instanceof HTMLElement)) return;
+      if (!(container instanceof HTMLElement) || !(grid instanceof HTMLElement) || !(progressContainer instanceof HTMLElement) || !(bar instanceof HTMLElement)) return;
 
-      const total = grid.scrollWidth - grid.clientWidth;
-
-      // Translate vertical wheel scroll to horizontal card-by-card snap scroll
-      let isThrottled = false;
-      grid.addEventListener("wheel", (e) => {
-        if (e.deltaY !== 0) {
-          e.preventDefault();
-          if (isThrottled) return;
-          isThrottled = true;
-          setTimeout(() => { isThrottled = false; }, 400);
-
-          const card = grid.querySelector(".project-card");
-          if (!card) return;
-          const cardWidth = card.clientWidth;
-          const gap = parseFloat(window.getComputedStyle(grid).gap) || 0;
-          const step = cardWidth + gap;
-
-          if (e.deltaY > 0) {
-            grid.scrollBy({ left: step, behavior: "smooth" });
-          } else {
-            grid.scrollBy({ left: -step, behavior: "smooth" });
-          }
-        }
+      // Trackpad deltas are continuous; let the browser snap after the gesture ends.
+      container.addEventListener("wheel", (event) => {
+        if (window.innerWidth <= 768 || grid.scrollWidth <= grid.clientWidth || event.deltaY === 0) return;
+        event.preventDefault();
+        const unit = event.deltaMode === WheelEvent.DOM_DELTA_LINE ? 16 : event.deltaMode === WheelEvent.DOM_DELTA_PAGE ? grid.clientWidth : 1;
+        grid.scrollLeft += event.deltaY * unit;
       }, { passive: false });
 
       const barWidth = 30; // matches CSS width
 
       function updateProgress() {
-        const scrollTotal = grid!.scrollWidth - grid!.clientWidth;
+        const scrollTotal = grid.scrollWidth - grid.clientWidth;
         if (scrollTotal <= 0) {
-          progressContainer!.style.display = "none";
+          progressContainer.style.display = "none";
           return;
         }
-        progressContainer!.style.display = "flex";
-        const ratio = grid!.scrollLeft / scrollTotal;
-        const containerWidth = bar!.parentElement ? bar!.parentElement.clientWidth : 100;
-        const maxLeft = containerWidth - barWidth;
-        bar!.style.left = `${ratio * maxLeft}px`;
-      }
-
-      if (total <= 0) {
-        progressContainer.style.display = "none";
-      } else {
         progressContainer.style.display = "flex";
-        updateProgress();
-        grid.addEventListener("scroll", updateProgress);
+        const ratio = grid.scrollLeft / scrollTotal;
+        const containerWidth = bar.parentElement ? bar.parentElement.clientWidth : 100;
+        const maxLeft = containerWidth - barWidth;
+        bar.style.left = `${ratio * maxLeft}px`;
       }
+
+      grid.addEventListener("scroll", updateProgress);
+      window.addEventListener("resize", updateProgress);
+      window.addEventListener("pageshow", updateProgress);
+      updateProgress();
     }
 
-    window.addEventListener("load", initScrollProgress);
-    window.addEventListener("resize", initScrollProgress);
-    window.addEventListener("pageshow", initScrollProgress);
-    if (document.readyState === "complete") {
-      initScrollProgress();
-    } else {
-      window.addEventListener("DOMContentLoaded", initScrollProgress);
-    }
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", initScrollProgress, { once: true });
+    } else initScrollProgress();
   </script>
 </Layout>
 
@@ -138,8 +114,7 @@ import { projects } from "../../data/projects.js";
     overflow-x: auto;
     overflow-y: hidden;
     scrollbar-width: none;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
+    scroll-snap-type: x proximity;
     scroll-padding-left: min(15vw, 8rem);
   }
 

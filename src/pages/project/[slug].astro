@@ -25,6 +25,7 @@ const { project, prevProject, nextProject } = Astro.props;
   description={`${project.title} - Architectural project by KHONG architects in Ho Chi Minh City, Viet Nam.`}
   canonicalPath={`/project/${project.slug}/`}
   active="Project"
+  scrollPage
 >
   <Fragment slot="structured-data">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -233,19 +234,10 @@ const { project, prevProject, nextProject } = Astro.props;
 
 <style is:global>
   .detail-container {
-    flex: 1;
     width: 100%;
     max-width: 1800px;
     margin: 0 auto;
     padding: 0.5rem min(15vw, 8rem) clamp(3rem, 6vh, 5rem);
-    /* page fits 100vh; long content scrolls inside this container only */
-    min-height: 0;
-    overflow-y: auto;
-    scrollbar-width: none;
-  }
-
-  .detail-container::-webkit-scrollbar {
-    display: none;
   }
 
   /* Grid Layout Detail */
@@ -382,8 +374,27 @@ const { project, prevProject, nextProject } = Astro.props;
     }
 
     .project-pager {
-      flex-direction: column;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
       align-items: center;
+      gap: 0.4rem;
+      font-size: clamp(0.65rem, 2.5vw, 0.78rem);
+    }
+
+    .project-pager a {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      text-align: center;
+    }
+
+    .project-pager a:first-child {
+      text-align: left;
+    }
+
+    .project-pager a:last-child {
+      text-align: right;
     }
   }
 

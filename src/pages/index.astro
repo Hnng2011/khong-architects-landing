@@ -1,11 +1,7 @@
 ---
 import Layout from "../layouts/Layout.astro";
 
-const contact = {
-  addressLine: "93/10 No Trang Long st ,Binh Loi Trung ward",
-  cityLine: "Ho Chi Minh city, Viet Nam",
-  email: "khongarch@gmail.com",
-};
+const contactEmail = "khongarch@gmail.com";
 ---
 
 <Layout
@@ -13,7 +9,6 @@ const contact = {
   description="KHONG architects studio in Ho Chi Minh City, Viet Nam. Explore projects, concepts, awards, and contact information."
   canonicalPath="/"
   active="Home"
-  noFooter
 >
   <Fragment slot="structured-data">
     <script type="application/ld+json" set:html={JSON.stringify({
@@ -21,8 +16,8 @@ const contact = {
       "@type": "ArchitecturalStudio",
       "name": "KHONG architects",
       "url": "https://khongvietnam.com/",
-      "logo": "https://khongvietnam.com/hotlink-ok/khong-logo.png",
-      "image": "https://khongvietnam.com/hotlink-ok/khong-logo.png",
+      "logo": "https://khongvietnam.com/hotlink-ok/khong-logo-new.jpg",
+      "image": "https://khongvietnam.com/hotlink-ok/khong-logo-new.jpg",
       "description": "KHONG architects is an architecture design studio based in Ho Chi Minh City, Viet Nam.",
       "address": {
         "@type": "PostalAddress",
@@ -30,39 +25,27 @@ const contact = {
         "addressLocality": "Ho Chi Minh City",
         "addressCountry": "VN"
       },
-      "email": contact.email
+      "email": contactEmail
     })} />
   </Fragment>
 
   <div class="landing">
-    <!-- Brand mark centered like the mobile reference -->
+    <!-- Use the supplied logo artwork intact. -->
     <a class="brand-wrapper" href="/" aria-label="KHONG architects — back to home">
       <img
         class="brand"
-        src="/hotlink-ok/khong-logo.png"
-        alt="KHONG architects"
-        width="720"
-        height="711"
+        src="/hotlink-ok/khong-logo-new.jpg"
+        alt=""
+        width="2215"
+        height="2560"
         decoding="async"
         fetchpriority="high"
       />
     </a>
+
+    <!-- Lotus artwork sits behind the shared footer. -->
+    <div class="lotus" data-background-src="/hotlink-ok/lotus-linework.avif" aria-hidden="true"></div>
   </div>
-
-  <!-- Lotus linework band above the fixed contact line -->
-  <div class="lotus" data-background-src="/hotlink-ok/lotus-linework.avif" aria-hidden="true"></div>
-
-  <!-- Fixed contact line (landing keeps it pinned at the very bottom) -->
-  <footer class="contact" aria-label="Studio contact information">
-    <address>
-      <span class="contact-address">
-        <span class="address-line">Ad : {contact.addressLine}</span>
-        <span class="address-line">{contact.cityLine}</span>
-      </span>
-      <span class="sep" aria-hidden="true">/</span>
-      <a href={`mailto:${contact.email}`}>Email: {contact.email}</a>
-    </address>
-  </footer>
 
   <noscript>
     <style>
@@ -102,52 +85,47 @@ const contact = {
 </Layout>
 
 <style is:global>
+  .home-page .site-main {
+    flex: none;
+  }
+
   .landing {
     position: relative;
-    flex: 1;
-    display: block;
-    height: calc(100svh - var(--header-h)); /* fit exactly one screen */
+    flex: none;
+    height: max(100svh, 780px);
     overflow: hidden;
-    padding: 0;
   }
 
   .brand-wrapper {
-    position: fixed;
-    /* The source logo includes transparent top padding visible in the reference crop. */
-    top: clamp(-6rem, -9vh, -4rem);
+    position: absolute;
+    width: clamp(240px, 23vw, 470px);
+    max-width: calc(100vw - 2rem);
+    top: -30px;
     left: 50%;
     z-index: 4;
     display: block;
     padding: 0;
     transform: translateX(-50%);
+    mix-blend-mode: multiply;
   }
 
-  /* Large on desktop, shrinks toward the mobile reference proportion */
-  /* Height cap keeps it inside the space above the lotus band */
   .brand {
     display: block;
-    width: clamp(24rem, 31vw, 34rem);
-    max-width: calc(100vw - 2rem);
-    min-width: 0;
+    width: 100%;
     height: auto;
-    object-fit: contain;
-    margin: 0 auto;
   }
 
   /* ── Lotus band ── */
   .lotus {
-    position: fixed;
+    position: absolute;
     z-index: 2;
     right: 0;
-    bottom: clamp(2.7rem, 5vh, 4.5rem);
+    top: max(296px, calc(100% - 821px));
     left: 0;
-    height: clamp(24rem, 64vh, 40rem);
-    /* keep the top edge soft so the brand above stays readable */
-    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%);
-    mask-image: linear-gradient(to bottom, transparent 0%, #000 14%);
+    height: 750px;
     background-repeat: no-repeat;
     background-size: cover;
-    background-position: center bottom;
+    background-position: center top;
     opacity: 0;
     transform: translateY(0.6rem);
     transition:
@@ -162,112 +140,21 @@ const contact = {
     transform: translateY(0);
   }
 
-  /* ── Fixed bottom contact line ── */
-  .contact {
-    position: fixed;
-    z-index: 7;
-    right: 1rem;
-    bottom: clamp(0.8rem, 2vh, 1.4rem);
-    left: 1rem;
-    color: var(--soft-ink);
-    font-size: clamp(0.66rem, 0.82vw, 0.92rem);
-    font-weight: 700;
-    line-height: 1.4;
-    text-align: center;
-  }
-
-  /* Give contact text a solid backdrop so the lotus never bleeds through */
-  .contact::before {
-    content: "";
-    position: absolute;
-    inset: -0.6rem -1.5rem;
-    z-index: -1;
-    background: rgba(255, 255, 255, 0.97);
-  }
-
-  .contact address {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    align-items: center;
-    gap: clamp(0.55rem, 1vw, 1.2rem);
-    margin: 0;
-    font-style: normal;
-    white-space: nowrap;
-  }
-
-  .contact address > span:first-child {
-    max-width: 100%;
-  }
-
-  .contact-address {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-  }
-
-  .contact-address .address-line + .address-line::before {
-    content: " - ";
-  }
-
-  .contact a {
-    transition: color 140ms ease;
-  }
-
-  .contact a:hover {
-    color: var(--ink);
-  }
-
   /* ── Responsive: mobile mirrors the reference image ── */
   @media (max-width: 768px) {
     .landing {
-      min-height: 100svh;
-      height: auto;
-      padding: 0 1rem 16rem;
-      overflow: hidden;
+      height: 100svh;
     }
 
     .brand-wrapper {
-      position: absolute;
-      top: clamp(2rem, 7vh, 4rem);
-      left: 50%;
-      padding: 0;
-      transform: translateX(-50%);
-    }
-
-    .brand {
-      width: min(72vw, 20rem);
+      width: min(55vw, 235px);
+      top: 17px;
     }
 
     .lotus {
-      height: clamp(14rem, 30vh, 17rem);
-      bottom: clamp(4.6rem, 8vh, 6rem);
-      background-size: cover;
-    }
-
-    .contact address {
-      flex-direction: column;
-      white-space: normal;
-      gap: 0.15rem;
-    }
-
-    .contact address > span:first-child {
-      max-width: min(100%, 29rem);
-      line-height: 1.5;
-    }
-
-    .contact-address {
-      flex-direction: column;
-      gap: 0.15rem;
-      max-width: 100%;
-    }
-
-    .contact-address .address-line + .address-line::before {
-      content: "";
-    }
-
-    .contact .sep {
-      display: none;
+      top: max(440px, calc(100% - 72px - 33vw));
+      height: 33vw;
+      background-size: 100% auto;
     }
   }
 </style>
