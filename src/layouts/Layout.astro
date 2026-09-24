@@ -110,39 +110,7 @@ const contact = {
 </html>
 
 <style is:global>
-  /* ── Design tokens — ONE font family for the whole site ── */
-  @font-face {
-    font-family: "KHONG Courier";
-    src: url("/fonts/cour.ttf") format("truetype");
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "KHONG Courier";
-    src: url("/fonts/courbd.ttf") format("truetype");
-    font-style: normal;
-    font-weight: 700;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "KHONG Courier";
-    src: url("/fonts/couri.ttf") format("truetype");
-    font-style: italic;
-    font-weight: 400;
-    font-display: swap;
-  }
-
-  @font-face {
-    font-family: "KHONG Courier";
-    src: url("/fonts/courbi.ttf") format("truetype");
-    font-style: italic;
-    font-weight: 700;
-    font-display: swap;
-  }
-
+  /* ── Design tokens — one font stack for the whole site ── */
   :root {
     --paper: #ffffff;
     --ink: #1b1b1b;
@@ -151,7 +119,7 @@ const contact = {
     --hairline: #ececec;
     --focus: #a00000;
     /* Single typeface across titles AND body text */
-    --font-site: "KHONG Courier", "Courier New", Courier, "Liberation Mono", monospace;
+    --font-site: "American Typewriter", "AmericanTypewriter", "Courier New", monospace;
     --header-h: clamp(3.4rem, 7vh, 5rem);
   }
 
@@ -188,6 +156,10 @@ const contact = {
   }
 
   h1, h2, h3, h4, p, address {
+    font-family: var(--font-site);
+  }
+
+  button, input, select, textarea {
     font-family: var(--font-site);
   }
 

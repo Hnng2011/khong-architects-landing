@@ -15,7 +15,7 @@ Dự án tuân thủ đầy đủ các chuẩn mực phát triển web hiện đ
 
 ### 1. 🏆 Tiêu Chuẩn W3C (W3C HTML5 & CSS3 Standards)
 - **Semantic HTML5**: Sử dụng chuẩn xác các thẻ ngữ nghĩa ngữ cảnh như `<header>`, `<main>`, `<footer>`, `<nav>`, `<article>`, `<address>` giúp cấu trúc trang web mạch lạc và rõ ràng.
-- **CSS3 Clean Variables System**: Hệ thống biến CSS nhất quán (`--paper`, `--ink`, `--soft-ink`, `--focus`, `--font-mono`), đảm bảo khả năng bảo trì và mở rộng lâu dài.
+- **CSS3 Clean Variables System**: Hệ thống biến CSS nhất quán (`--paper`, `--ink`, `--soft-ink`, `--focus`, `--font-site`). Toàn bộ chữ dùng American Typewriter khi thiết bị có sẵn font này; thiết bị khác dùng font dự phòng trong cùng một font stack.
 
 ### 2. 🔍 Audit SEO & Cấu Hình Indexing Hiện Đại
 - **Kiểm Soát Indexing Chuẩn Xác**:
