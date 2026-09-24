@@ -31,9 +31,8 @@ const navItems = [
 ];
 
 const contact = {
-  addressLine: "93/10 No Trang Long st ,Binh Loi Trung ward",
+  addressLine: "93/10 No Trang Long st,Binh Loi Trung ward",
   cityLine: "Ho Chi Minh city, Viet Nam",
-  phone: "0913 771 489",
   email: "khongarch@gmail.com",
 };
 ---
@@ -52,6 +51,12 @@ const contact = {
     <link rel="icon" type="image/png" href="/favicon-48x48.png" sizes="48x48" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180" />
     <link rel="manifest" href="/manifest.json" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cutive+Mono&display=swap"
+    />
 
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="KHONG architects" />
@@ -94,14 +99,9 @@ const contact = {
 
     <footer class="site-footer" aria-label="Studio contact information">
       <address>
-        <span class="contact-address">
-          <span class="address-line">Ad : {contact.addressLine}</span>
-          <span class="address-line">{contact.cityLine}</span>
-        </span>
-        <span class="sep" aria-hidden="true">/</span>
-        <a href={`tel:${contact.phone.replaceAll(" ", "")}`}>Phone: {contact.phone}</a>
-        <span class="sep" aria-hidden="true">/</span>
-        <a href={`mailto:${contact.email}`}>Email: {contact.email}</a>
+        <span class="footer-row footer-address">Ad : {contact.addressLine}</span>
+        <span class="footer-row footer-city">{contact.cityLine}</span>
+        <a class="footer-row footer-email" href={`mailto:${contact.email}`}>Email: {contact.email}</a>
       </address>
     </footer>
 
@@ -119,7 +119,7 @@ const contact = {
     --hairline: #ececec;
     --focus: #a00000;
     /* Single typeface across titles AND body text */
-    --font-site: "American Typewriter", "AmericanTypewriter", "Courier New", monospace;
+    --font-site: "Cutive Mono", "Courier New", monospace;
     --header-h: clamp(3.4rem, 7vh, 5rem);
   }
 
@@ -272,23 +272,12 @@ const contact = {
     white-space: nowrap;
   }
 
-  .site-footer .sep {
-    color: var(--faint-ink);
-  }
-
-  .site-footer .contact-address {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
+  .site-footer .footer-row {
+    width: 100%;
+    min-width: 0;
     max-width: 100%;
-  }
-
-  .site-footer .address-line {
-    max-width: 100%;
-  }
-
-  .site-footer .address-line + .address-line::before {
-    content: " - ";
+    overflow-wrap: break-word;
+    text-align: center;
   }
 
   .site-footer a {
@@ -358,25 +347,18 @@ const contact = {
     .site-footer address {
       flex-direction: column;
       white-space: normal;
-      gap: 0.15rem;
+      gap: 0.22rem;
     }
 
     .site-footer {
-      font-size: 11px;
-      padding-bottom: max(24px, env(safe-area-inset-bottom));
+      font-size: clamp(0.42rem, 1.75vw, 0.68rem);
+      letter-spacing: -0.01em;
+      padding: 0.7rem 0.75rem max(1rem, env(safe-area-inset-bottom));
     }
 
-    .site-footer .contact-address {
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-
-    .site-footer .address-line + .address-line::before {
-      content: "";
-    }
-
-    .site-footer .sep {
-      display: none;
+    .site-footer .footer-address {
+      white-space: nowrap;
+      transform: scaleX(0.68);
     }
   }
 

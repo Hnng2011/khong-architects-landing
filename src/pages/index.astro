@@ -43,45 +43,18 @@ const contactEmail = "khongarch@gmail.com";
       />
     </a>
 
-    <!-- Lotus artwork sits above the footer on mobile. -->
-    <div class="lotus" data-background-src="/hotlink-ok/lotus-linework.avif" aria-hidden="true"></div>
+    <!-- Keep the full lotus artwork visible above the footer on mobile. -->
+    <div class="lotus" aria-hidden="true">
+      <img
+        class="lotus-image"
+        src="/hotlink-ok/lotus-linework.avif"
+        alt=""
+        width="1800"
+        height="798"
+        decoding="async"
+      />
+    </div>
   </div>
-
-  <noscript>
-    <style>
-      .lotus {
-        background-image: url("/hotlink-ok/lotus-linework.avif");
-        opacity: 1;
-        transform: translateY(0);
-      }
-    </style>
-  </noscript>
-
-  <script>
-    const lotusBackground = document.querySelector(".lotus");
-
-    function revealLotusBackground() {
-      if (!(lotusBackground instanceof HTMLElement)) return;
-      const source = lotusBackground.dataset.backgroundSrc;
-      if (!source) return;
-
-      const image = new Image();
-      image.decoding = "async";
-      image.onload = () => {
-        lotusBackground.style.backgroundImage = `url("${source}")`;
-        requestAnimationFrame(() => {
-          lotusBackground.classList.add("is-loaded");
-        });
-      };
-      image.src = source;
-    }
-
-    window.addEventListener("load", () => {
-      const scheduleIdle =
-        window.requestIdleCallback ?? ((callback) => window.setTimeout(callback, 180));
-      scheduleIdle(revealLotusBackground, { timeout: 900 });
-    });
-  </script>
 </Layout>
 
 <style is:global>
@@ -120,13 +93,10 @@ const contactEmail = "khongarch@gmail.com";
     position: absolute;
     z-index: 2;
     right: 0;
-    top: max(296px, calc(100% - 821px));
     left: 0;
-    height: 750px;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center top;
-    opacity: 0;
+    bottom: 0;
+    overflow: hidden;
+    opacity: 1;
     transform: translateY(0.6rem);
     transition:
       opacity 1100ms ease,
@@ -135,9 +105,11 @@ const contactEmail = "khongarch@gmail.com";
     user-select: none;
   }
 
-  .lotus.is-loaded {
-    opacity: 1;
-    transform: translateY(0);
+  .lotus-image {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: none;
   }
 
   /* ── Responsive: mobile mirrors the reference image ── */
@@ -157,10 +129,8 @@ const contactEmail = "khongarch@gmail.com";
     }
 
     .lotus {
-      /* Preserve the source image's 1800 × 798 aspect ratio. */
-      top: max(440px, calc(100% - 44.333vw));
-      height: 44.333vw;
-      background-size: 100% auto;
+      /* The image keeps its native ratio, so every lotus is shown. */
+      bottom: 0;
     }
   }
 </style>
