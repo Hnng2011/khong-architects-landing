@@ -43,7 +43,7 @@ const contactEmail = "khongarch@gmail.com";
       />
     </a>
 
-    <!-- Lotus artwork sits behind the shared footer. -->
+    <!-- Lotus artwork sits above the footer on mobile. -->
     <div class="lotus" data-background-src="/hotlink-ok/lotus-linework.avif" aria-hidden="true"></div>
   </div>
 
@@ -142,8 +142,13 @@ const contactEmail = "khongarch@gmail.com";
 
   /* ── Responsive: mobile mirrors the reference image ── */
   @media (max-width: 768px) {
+    .home-page .site-main {
+      flex: 1;
+      min-height: 0;
+    }
+
     .landing {
-      height: 100svh;
+      height: 100%;
     }
 
     .brand-wrapper {
@@ -152,8 +157,9 @@ const contactEmail = "khongarch@gmail.com";
     }
 
     .lotus {
-      top: max(440px, calc(100% - 72px - 33vw));
-      height: 33vw;
+      /* Preserve the source image's 1800 × 798 aspect ratio. */
+      top: max(440px, calc(100% - 44.333vw));
+      height: 44.333vw;
       background-size: 100% auto;
     }
   }
